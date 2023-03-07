@@ -1,12 +1,13 @@
 package com.example.training_spring_react;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
