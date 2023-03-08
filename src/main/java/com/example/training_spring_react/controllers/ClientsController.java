@@ -1,13 +1,14 @@
-package com.example.training_spring_react;
+package com.example.training_spring_react.controllers;
 
-import jakarta.validation.Valid;
+import com.example.training_spring_react.models.Client;
+import com.example.training_spring_react.repositories.ClientRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
@@ -21,12 +22,12 @@ import java.util.Map;
 public class ClientsController {
 
     //Getting ClientRepository object and adding in constructor
-
     private final ClientRepository clientRepository;
 
     public ClientsController(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
     }
+
 
     //Client list for default path '/clients' (in Controller)
     @GetMapping
@@ -39,6 +40,7 @@ public class ClientsController {
     public List<Client> getYoungestClients() {
         return clientRepository.findYoungestClients();
     }
+
 
     //Getting client by id from URI
     @GetMapping("/{id}")
@@ -57,27 +59,8 @@ public class ClientsController {
         return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
     }
 
-    //Update client (looking for client by id from URI, setting new values, saving again)
 
-    @PutMapping("/{id}")
-    public ResponseEntity updateClient(@PathVariable Long id, @RequestBody Client client) {
-        Client currentClient = clientRepository.findById(id).orElseThrow(RuntimeException::new);
-        currentClient.setName(client.getName());
-        currentClient.setEmail(client.getEmail());
-        currentClient = clientRepository.save(client);
-
-        return ResponseEntity.ok(currentClient);
-    }
-
-    //Deleting client by ID from URI
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteClient(@PathVariable Long id) {
-        clientRepository.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
-
-
-        /*
+    /*
     The @ExceptionHandler annotation allows us to handle specified types of exceptions through
      one single method, we can use it for processing the validation errors
 
@@ -101,5 +84,24 @@ public class ClientsController {
         return errors;
     }
 
+
+    //Update client (looking for client by id from URI, setting new values, saving again)
+    @PutMapping("/{id}")
+    public ResponseEntity updateClient(@PathVariable Long id, @RequestBody Client client) {
+        Client currentClient = clientRepository.findById(id).orElseThrow(RuntimeException::new);
+        currentClient.setName(client.getName());
+        currentClient.setEmail(client.getEmail());
+        currentClient = clientRepository.save(client);
+
+        return ResponseEntity.ok(currentClient);
+    }
+
+
+    //Deleting client by ID from URI
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteClient(@PathVariable Long id) {
+        clientRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 
 }

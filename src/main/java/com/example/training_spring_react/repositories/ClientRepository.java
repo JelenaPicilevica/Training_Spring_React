@@ -1,5 +1,6 @@
-package com.example.training_spring_react;
+package com.example.training_spring_react.repositories;
 
+import com.example.training_spring_react.models.Client;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
