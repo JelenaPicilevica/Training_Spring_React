@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import ClientList from './ClientList';
 import ClientEdit from "./ClientEdit";
 import YoungestClientList from "./YoungestClientList";
+import Login from "./Login";
+
 
 
 class App extends Component {
@@ -14,6 +16,7 @@ class App extends Component {
                 <Switch>
                     <Route path='/' exact={true} component={Home}/>
                     <Route path='/clients' exact={true} component={ClientList}/>
+                    <Route path='/login' component={Login}/>
                     <Route path='/clients/youngest' component={YoungestClientList}/>
                     <Route path='/clients/:id' component={ClientEdit}/>
                 </Switch>
