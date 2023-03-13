@@ -11,4 +11,8 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     @Query(value = "SELECT * FROM clients WHERE age = (SELECT MIN(age)FROM clients)", nativeQuery = true)
     ArrayList<Client> findYoungestClients();
 
+    @Query(value = "SELECT * FROM clients WHERE link IS NOT NULL", nativeQuery = true)
+    ArrayList<Client> findLinkedClients();
+
+    Client findClientById(Long id);
 }

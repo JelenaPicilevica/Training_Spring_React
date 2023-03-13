@@ -58,10 +58,12 @@ class ClientList extends Component {
 
         const clientList = clients.map(client => {      //going through the list one by one and adding data to table rows
             return <tr key={client.id}>
-                <td style={{whiteSpace: 'nowrap'}}>{client.name}</td>
+                <td style={{whiteSpace: 'nowrap'}}>{client.id}</td>
+                <td>{client.name}</td>
                 <td>{client.email}</td>
                 <td>{client.dob}</td>
                 <td>{client.age}</td>
+                <td>{client.link}</td>
                 <td>
                     <ButtonGroup>
                         <Button size="sm" color="primary" tag={Link} to={"/clients/" + client.id}>Edit</Button>
@@ -81,16 +83,19 @@ class ClientList extends Component {
                         {/**/}
                         <Button color="success" tag={Link} to="/clients/new">Add Client</Button>
                         <Button color="success" tag={Link} to="/clients/youngest">Youngest clients</Button>
+                        <Button color="success" tag={Link} to="/clients/linked">Linked clients</Button>
                     </div>
                     <h3>Clients</h3>
                     <Table className="mt-4">
                         <thead>
                         <tr>
-                            <th width="15%">Name</th>
-                            <th width="15%">Email</th>
-                            <th width="15%">Date of Birth</th>
-                            <th width="15%">Age</th>
-                            <th width="40%">Actions</th>
+                            <th width="8%">Id</th>
+                            <th width="18%">Name</th>
+                            <th width="18%">Email</th>
+                            <th width="13%">Date of Birth</th>
+                            <th width="8%">Age</th>
+                            <th width="8%">Link</th>
+                            <th width="30%">Actions</th>
                         </tr>
                         </thead>
                         <tbody>

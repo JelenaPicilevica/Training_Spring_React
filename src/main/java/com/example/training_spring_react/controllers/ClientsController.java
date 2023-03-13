@@ -43,6 +43,13 @@ public class ClientsController {
     }
 
 
+    //Linked client list, path '/clients/linked'
+    @GetMapping("/linked")
+    public List<Client> getLinkedClients() {
+        return clientRepository.findLinkedClients();
+    }
+
+
     //Getting client by id from URI
     @GetMapping("/{id}")
     public Client getClient(@PathVariable Long id) {
@@ -53,11 +60,26 @@ public class ClientsController {
     //@ Valid - when the target argument fails to pass the validation, Spring Boot throws a
     //MethodArgumentNotValidException exception.
 
+    //@RequestBody => JSON data to JAVA object
     @PostMapping
     public ResponseEntity createClient(@Valid @RequestBody Client client) throws URISyntaxException {
+        //Setting age automatically
         client.setAge(Period.between(client.getDob(), LocalDate.now()).getYears());
-        Client savedClient = clientRepository.save(client);
-        return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
+
+        //VALIDATION OF LINK
+
+        //Reference to other client entered by user
+        long referenceToOtherClient = client.getLink();
+
+        //If client with id defined as reference exists => we save client
+        if(clientRepository.findClientById(referenceToOtherClient) != null){
+            Client savedClient = clientRepository.save(client);
+            return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
+
+        //If client with id defined as reference NOT exists => we don't client
+        }else{
+            return ResponseEntity.badRequest().body("This client link does NOT exists: " + referenceToOtherClient);
+        }
     }
 
 
@@ -90,11 +112,28 @@ public class ClientsController {
     @PutMapping("/{id}")
     public ResponseEntity updateClient(@PathVariable Long id, @RequestBody Client client) {
         Client currentClient = clientRepository.findById(id).orElseThrow(RuntimeException::new);
+
         currentClient.setName(client.getName());
         currentClient.setEmail(client.getEmail());
-        currentClient = clientRepository.save(client);
+        currentClient.setDob(client.getDob());
+        currentClient.setAge(Period.between(currentClient.getDob(), LocalDate.now()).getYears());
 
-        return ResponseEntity.ok(currentClient);
+        //VALIDATION OF LINK
+
+        //Reference to other client entered by user
+        long referenceToOtherClient = client.getLink();
+
+        //If client with id defined as reference exists => we save client
+        if(clientRepository.findClientById(referenceToOtherClient) != null){
+            //System.out.println(clientRepository.findById(referenceToOtherClient));
+            currentClient.setLink(referenceToOtherClient);
+            clientRepository.save(currentClient);
+            return ResponseEntity.ok(currentClient);
+
+            //If client with id defined as reference NOT exists => we don't client
+        }else{
+            return ResponseEntity.badRequest().body("This client link does NOT exists: " + referenceToOtherClient);
+        }
     }
 
 

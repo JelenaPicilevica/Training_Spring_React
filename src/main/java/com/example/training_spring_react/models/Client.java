@@ -36,4 +36,6 @@ public class Client {
     private LocalDate dob;
     private Integer age;        //calculated automatically from dob
 
+    private Long link;  //link uz citu klientu
+
 }

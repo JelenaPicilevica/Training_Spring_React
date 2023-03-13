@@ -6,6 +6,7 @@ import ClientList from './ClientList';
 import ClientEdit from "./ClientEdit";
 import YoungestClientList from "./YoungestClientList";
 import Login from "./Login";
+import LinkedClientList from "./LinkedClientList";
 
 
 
@@ -18,6 +19,7 @@ class App extends Component {
                     <Route path='/clients' exact={true} component={ClientList}/>
                     <Route path='/login' component={Login}/>
                     <Route path='/clients/youngest' component={YoungestClientList}/>
+                    <Route path='/clients/linked' component={LinkedClientList}/>
                     <Route path='/clients/:id' component={ClientEdit}/>
                 </Switch>
             </Router>

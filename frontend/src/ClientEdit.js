@@ -10,7 +10,8 @@ class ClientEdit extends Component {
     emptyItem = {                    //object with NO name, email, dob
         name: '',
         email: '',
-        dob: ''                         //Added for new task
+        dob: '',
+        link: ''                    //Added for new task => reference to other user
     };
 
     constructor(props) {
@@ -98,6 +99,14 @@ class ClientEdit extends Component {
                         <Label for="dob">Date of Birth</Label>
                         <Input type="date" name="dob" id="dob" value={item.dob || ''}
                                onChange={this.handleChange} autoComplete="dob"/>
+                    </FormGroup>
+
+                    {/*Added new field below*/}
+
+                    <FormGroup>
+                        <Label for="link">Link to other user</Label>
+                        <Input type="text" name="link" id="link" value={item.link || ''}
+                               onChange={this.handleChange} autoComplete="link"/>
                     </FormGroup>
 
                     <FormGroup>
