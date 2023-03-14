@@ -60,7 +60,7 @@ class ClientEdit extends Component {
         const {item} = this.state;
 
         //RESPONSE FROM BACK-END
-        await fetch('/clients' + (item.id ? '/' + item.id : ''), {
+        const response = await fetch('/clients' + (item.id ? '/' + item.id : ''), {
             method: (item.id) ? 'PUT' : 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -68,7 +68,15 @@ class ClientEdit extends Component {
             },
             body: JSON.stringify(item),
         });
-        this.props.history.push('/clients'); //push => method adds one or more elements to the end of an array and returns the new length of the array
+        //IF - ELSE  (for response from back-end)
+        if(!response.ok){
+            this.props.history.push('/clients');
+            console.log("Something went wrong, status code: " + response.status);
+        }else{
+            this.props.history.push('/clients');
+            console.log("Successful operation, status code: " + response.status);
+        }
+       // this.props.history.push('/clients'); //push => method adds one or more elements to the end of an array and returns the new length of the array
     }
 
     render() {

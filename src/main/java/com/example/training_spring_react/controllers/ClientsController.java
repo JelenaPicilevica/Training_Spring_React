@@ -71,15 +71,24 @@ public class ClientsController {
         //Reference to other client entered by user
         long referenceToOtherClient = client.getLink();
 
-        //If client with id defined as reference exists => we save client
+        //1. If client with id defined as reference exists or link is 0 => counting number of links and set to client
         if(clientRepository.findClientById(referenceToOtherClient) != null){
-            Client savedClient = clientRepository.save(client);
-            return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
 
-        //If client with id defined as reference NOT exists => we don't client
+            //Calculating number of links with function and set this number to client
+            long numberOfLinks = countLinks(client);
+            client.setLinkCount(numberOfLinks);
+
+
+        //2. If client with id defined as reference NOT exists => we set link as 0 and accordingly link count as 0
         }else{
-            return ResponseEntity.badRequest().body("This client link does NOT exists: " + referenceToOtherClient);
+            client.setLink(0L);
+            client.setLinkCount(0L);  //if link was set incorrectly => total link count = 0
+            //OLD: return ResponseEntity.badRequest().body("This client link does NOT exists: " + referenceToOtherClient);
         }
+
+        //Saving client and returning ResponseEntity
+        Client savedClient = clientRepository.save(client);
+        return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
     }
 
 
@@ -123,10 +132,15 @@ public class ClientsController {
         //Reference to other client entered by user
         long referenceToOtherClient = client.getLink();
 
-        //If client with id defined as reference exists => we save client
-        if(clientRepository.findClientById(referenceToOtherClient) != null){
-            //System.out.println(clientRepository.findById(referenceToOtherClient));
+
+        //If client with id defined as reference exists or value is 0 => we set this link to editable client as reference
+        if(clientRepository.findClientById(referenceToOtherClient) != null || referenceToOtherClient == 0){
             currentClient.setLink(referenceToOtherClient);
+
+            //Calculating number of links with function and set this number to client
+            long numberOfLinks = countLinks(currentClient);
+            currentClient.setLinkCount(numberOfLinks);
+
             clientRepository.save(currentClient);
             return ResponseEntity.ok(currentClient);
 
@@ -134,6 +148,7 @@ public class ClientsController {
         }else{
             return ResponseEntity.badRequest().body("This client link does NOT exists: " + referenceToOtherClient);
         }
+
     }
 
 
@@ -143,5 +158,28 @@ public class ClientsController {
         clientRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
+
+
+    //Method for link counting
+    public long countLinks (Client client){
+        //Defining variables
+        long countingNumOfLinks = 0;      //
+        long userId = client.getLink();  //id of client from the link (link frm client we create)
+
+        //Counting through while cycle=> if next link found, we count +1 and take this link as new user id
+
+        while (userId != 0L){
+            countingNumOfLinks +=1;
+            long foundLink = clientRepository.findLinkByClientId(userId);  //found link => id of other client
+            userId = foundLink;                                 //new user id = link that is id of other client
+            System.out.println("Counting links: " + countingNumOfLinks);
+            System.out.println("Found next link: " + userId);
+        }
+
+        System.out.println("Link calculation stopped");
+        return countingNumOfLinks;
+    }
+
+
 
 }

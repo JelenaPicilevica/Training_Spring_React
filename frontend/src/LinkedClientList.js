@@ -37,6 +37,7 @@ class LinkedClientList extends Component {
                 <td>{client.dob}</td>
                 <td>{client.age}</td>
                 <td>{client.link}</td>
+                <td>{client.linkCount}</td>
                 <td>
                     <ButtonGroup>
                         <Button size="sm" color="primary" tag={Link} to={"/clients/" + client.id}>Edit</Button>
@@ -62,10 +63,11 @@ class LinkedClientList extends Component {
                             <th width="8%">Id</th>
                             <th width="18%">Name</th>
                             <th width="18%">Email</th>
-                            <th width="13%">Date of Birth</th>
+                            <th width="15%">Date of Birth</th>
                             <th width="8%">Age</th>
                             <th width="8%">Link</th>
-                            <th width="30%">Actions</th>
+                            <th width="8%">Link count</th>
+                            <th width="35%">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
