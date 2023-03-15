@@ -1,7 +1,6 @@
 package com.example.training_spring_react.models;
 
 
-import com.example.training_spring_react.models.enums.Manager;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,10 +38,17 @@ public class Client {
 
     private Long linkCount;  //number of links starting from this client
 
-    @ManyToOne                                                          //one manager can have many clients
-    @PrimaryKeyJoinColumn(name = "manager_id", referencedColumnName = "id")
+//    @ManyToOne                                                          //one manager can have many clients
+//    @PrimaryKeyJoinColumn(name = "manager_id", referencedColumnName = "id")
+//    private Manager manager;
+
+
+    @JoinColumn (name = "manager_id", insertable = false, updatable = false)
+    @ManyToOne(targetEntity = Manager.class, fetch = FetchType.EAGER)
     private Manager manager;
 
+    @Column(name = "manager_id")
+    private Long managerID;
 
     //Additional constructor if manager is not inputted
     public Client(String name, String email, LocalDate dob, Long link) {

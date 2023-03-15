@@ -2,6 +2,7 @@ package com.example.training_spring_react.controllers;
 
 import com.example.training_spring_react.models.Client;
 import com.example.training_spring_react.repositories.ClientRepository;
+import com.example.training_spring_react.services.ManagerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -24,9 +25,11 @@ public class ClientsController {
 
     //Getting ClientRepository object and adding in constructor
     private final ClientRepository clientRepository;
+    private final ManagerService managerService;
 
-    public ClientsController(ClientRepository clientRepository) {
+    public ClientsController(ClientRepository clientRepository, ManagerService managerService) {
         this.clientRepository = clientRepository;
+        this.managerService = managerService;
     }
 
 
@@ -63,7 +66,8 @@ public class ClientsController {
     //@RequestBody => JSON data to JAVA object
     @PostMapping
     public ResponseEntity createClient(@Valid @RequestBody Client client) throws URISyntaxException {
-        //Setting age automatically
+
+        //SETTING AGE AUTOMATICALLY
         client.setAge(Period.between(client.getDob(), LocalDate.now()).getYears());
 
         //VALIDATION OF LINK
@@ -78,15 +82,24 @@ public class ClientsController {
             long numberOfLinks = countLinks(client);
             client.setLinkCount(numberOfLinks);
 
-
         //2. If client with id defined as reference NOT exists => we set link as 0 and accordingly link count as 0
         }else{
             client.setLink(0L);
             client.setLinkCount(0L);  //if link was set incorrectly => total link count = 0
-            //OLD: return ResponseEntity.badRequest().body("This client link does NOT exists: " + referenceToOtherClient);
         }
 
-        //Saving client and returning ResponseEntity
+        //VALIDATION OF MANAGER ID
+
+        //If manager with such id found (true) we set it to client
+        //If manager with such id NOT found (false) we set manager id as '0'
+
+        if (checkManagerExistenceById(client)){            //method takes entered manager id for this client
+            client.setManagerID(client.getManagerID());
+        }else{
+            client.setId(0L);
+        }
+
+        //SAVING CLIENT AND RETURNING RESPONSE ENTITY
         Client savedClient = clientRepository.save(client);
         return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
     }
@@ -125,6 +138,7 @@ public class ClientsController {
         currentClient.setName(client.getName());
         currentClient.setEmail(client.getEmail());
         currentClient.setDob(client.getDob());
+//        currentClient.setManagerID(client.getManagerID());
         currentClient.setAge(Period.between(currentClient.getDob(), LocalDate.now()).getYears());
 
         //VALIDATION OF LINK
@@ -141,14 +155,26 @@ public class ClientsController {
             long numberOfLinks = countLinks(currentClient);
             currentClient.setLinkCount(numberOfLinks);
 
-            clientRepository.save(currentClient);
-            return ResponseEntity.ok(currentClient);
-
-            //If client with id defined as reference NOT exists => we don't client
+            //If client with id defined as reference NOT exists => we don't save client
         }else{
             return ResponseEntity.badRequest().body("This client link does NOT exists: " + referenceToOtherClient);
         }
 
+        //VALIDATION OF MANAGER ID
+
+        //If manager with such id found (true) we set it to client
+        //If manager with such id NOT found (false) we don't save client update
+
+        if (checkManagerExistenceById(client)){            //method takes entered manager id for this client
+            currentClient.setManagerID(client.getManagerID());
+        }else{
+            return ResponseEntity.badRequest().body("Manager with this id does NOT exists: " + client.getManagerID());
+        }
+
+        //AFTER ALL CHECKINGS SAVE DATA
+
+        clientRepository.save(currentClient);
+        return ResponseEntity.ok(currentClient);
     }
 
 
@@ -180,6 +206,17 @@ public class ClientsController {
         return countingNumOfLinks;
     }
 
+
+    public Boolean checkManagerExistenceById (Client client){
+
+        Long ManagerId = client.getManagerID();
+
+        if (managerService.findManagerById(ManagerId) != null){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
 
 }

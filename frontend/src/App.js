@@ -7,6 +7,8 @@ import ClientEdit from "./ClientEdit";
 import YoungestClientList from "./YoungestClientList";
 import Login from "./Login";
 import LinkedClientList from "./LinkedClientList";
+import ManagerList from "./ManagerList";
+import TopManagerList from "./TopManagerList";
 
 
 
@@ -17,6 +19,8 @@ class App extends Component {
                 <Switch>
                     <Route path='/' exact={true} component={Home}/>
                     <Route path='/clients' exact={true} component={ClientList}/>
+                    <Route path='/managers' exact={true} component={ManagerList}/>
+                    <Route path='/managers/top' exact={true} component={TopManagerList}/>
                     <Route path='/login' component={Login}/>
                     <Route path='/clients/youngest' component={YoungestClientList}/>
                     <Route path='/clients/linked' component={LinkedClientList}/>

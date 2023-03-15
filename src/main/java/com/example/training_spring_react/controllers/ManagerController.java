@@ -1,6 +1,6 @@
 package com.example.training_spring_react.controllers;
 
-import com.example.training_spring_react.models.enums.Manager;
+import com.example.training_spring_react.models.Manager;
 import com.example.training_spring_react.services.ManagerService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,5 +20,10 @@ public class ManagerController {
   @GetMapping("/managers")
     public List<Manager> getManagers() {
         return managerService.findAllManagers();
+    }
+
+    @GetMapping("/managers/top")
+    public List<Manager> getTopManagers() {
+        return managerService.findTopManagers();
     }
 }

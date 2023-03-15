@@ -1,6 +1,7 @@
 package com.example.training_spring_react.services;
 
-import com.example.training_spring_react.models.enums.Manager;
+import com.example.training_spring_react.models.Manager;
+import com.example.training_spring_react.models.User;
 import com.example.training_spring_react.repositories.ManagerRepository;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,14 @@ public class ManagerService {
     //Method to find all managers, put them in the list and return
     public List <Manager> findAllManagers(){
         return this.managerRepository.findAll();
+    }
+
+    public List <Manager> findTopManagers(){
+        return this.managerRepository.findManagersWithLargestClientNumber();
+    }
+
+    public Manager findManagerById(Long managerId){
+       return managerRepository.findManagerById(managerId);
     }
 
 }
