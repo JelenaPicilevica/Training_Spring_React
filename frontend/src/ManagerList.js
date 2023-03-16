@@ -52,6 +52,7 @@ class ManagerList extends Component {
                 <Container fluid>
                     <div className="float-right">
                         <Button color="success" tag={Link} to="/managers/top">See top managers</Button>
+                        <Button color="danger" tag={Link} to="/managers/weakest">See weakest managers</Button>
                     </div>
                     <h3>Managers</h3>
                     <Table className="mt-4">
@@ -66,7 +67,7 @@ class ManagerList extends Component {
                         {managerList}
                         </tbody>
                     </Table>
-                    <Button color="secondary" tag={Link} to="/">Go back to home page</Button>
+                    <Button color="secondary" tag={Link} to="/">Go to home page</Button>
                 </Container>
             </div>
         );

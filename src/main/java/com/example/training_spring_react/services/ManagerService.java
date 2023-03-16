@@ -26,6 +26,10 @@ public class ManagerService {
         return this.managerRepository.findManagersWithLargestClientNumber();
     }
 
+    public List <Manager> findWeakestManagers(){
+        return this.managerRepository.findManagersWithSmallestClientNumber();
+    }
+
     public Manager findManagerById(Long managerId){
        return managerRepository.findManagerById(managerId);
     }

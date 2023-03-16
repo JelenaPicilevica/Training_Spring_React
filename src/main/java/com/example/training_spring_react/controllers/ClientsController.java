@@ -93,10 +93,10 @@ public class ClientsController {
         //If manager with such id found (true) we set it to client
         //If manager with such id NOT found (false) we set manager id as '0'
 
-        if (checkManagerExistenceById(client)){            //method takes entered manager id for this client
+        if (checkManagerExistenceById(client.getManagerID())){
             client.setManagerID(client.getManagerID());
         }else{
-            client.setId(0L);
+            client.setId(3L);
         }
 
         //SAVING CLIENT AND RETURNING RESPONSE ENTITY
@@ -165,7 +165,7 @@ public class ClientsController {
         //If manager with such id found (true) we set it to client
         //If manager with such id NOT found (false) we don't save client update
 
-        if (checkManagerExistenceById(client)){            //method takes entered manager id for this client
+        if (checkManagerExistenceById(client.getManagerID())){            //method takes entered manager id for this client
             currentClient.setManagerID(client.getManagerID());
         }else{
             return ResponseEntity.badRequest().body("Manager with this id does NOT exists: " + client.getManagerID());
@@ -207,11 +207,9 @@ public class ClientsController {
     }
 
 
-    public Boolean checkManagerExistenceById (Client client){
+    public Boolean checkManagerExistenceById (Long managerId){
 
-        Long ManagerId = client.getManagerID();
-
-        if (managerService.findManagerById(ManagerId) != null){
+        if (managerService.findManagerById(managerId) != null){
             return true;
         }else {
             return false;

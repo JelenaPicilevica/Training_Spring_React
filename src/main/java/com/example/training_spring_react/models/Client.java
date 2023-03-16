@@ -51,10 +51,10 @@ public class Client {
     private Long managerID;
 
     //Additional constructor if manager is not inputted
-    public Client(String name, String email, LocalDate dob, Long link) {
-        this.name = name;
-        this.email = email;
-        this.dob = dob;
-        this.link = link;
-    }
+//    public Client(String name, String email, LocalDate dob, Long link) {
+//        this.name = name;
+//        this.email = email;
+//        this.dob = dob;
+//        this.link = link;
+//    }
 }

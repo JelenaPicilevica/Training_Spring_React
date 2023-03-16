@@ -26,4 +26,10 @@ public class ManagerController {
     public List<Manager> getTopManagers() {
         return managerService.findTopManagers();
     }
+
+    @GetMapping("/managers/weakest")
+    public List<Manager> getWeakestManagers() {
+        return managerService.findWeakestManagers();
+    }
+
 }

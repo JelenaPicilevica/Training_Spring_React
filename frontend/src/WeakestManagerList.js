@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 This component fetches manager data from endpoint '/managers', shows this data in tabular form
  */
 
-class TopManagerList extends Component {
+class WeakestManagerList extends Component {
 
     constructor(props) {
         super(props);
@@ -18,7 +18,7 @@ class TopManagerList extends Component {
     //ComponentDidMount function is calling our API to load our client list that is converted in JSON and
     //set as a new state of 'clients'
     componentDidMount() {
-        fetch('/managers/top')                        //receiving data from 'managers' endpoint
+        fetch('/managers/weakest')                        //receiving data from 'managers' endpoint
             .then(response => response.json())        //function: 'response' is an argument(data from endpoint), argument should be converted to JSON
             .then(data => this.setState({managers: data})); //function: 'data' is an argument (received data), it set as state to 'clients'
     }
@@ -50,7 +50,7 @@ class TopManagerList extends Component {
             <div>
                 <AppNavbar/>
                 <Container fluid>
-                    <h3>TOP Managers</h3>
+                    <h3>Weakest managers</h3>
                     <Table className="mt-4">
                         <thead>
                         <tr>
@@ -70,5 +70,5 @@ class TopManagerList extends Component {
     }
 
 }
-export default TopManagerList;
+export default WeakestManagerList;
 

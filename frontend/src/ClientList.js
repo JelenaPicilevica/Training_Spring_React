@@ -65,6 +65,8 @@ class ClientList extends Component {
                 <td>{client.age}</td>
                 <td>{client.link}</td>
                 <td>{client.linkCount}</td>
+                <td>{client.managerID}</td>
+
                 <td>
                     <ButtonGroup>
                         <Button size="sm" color="primary" tag={Link} to={"/clients/" + client.id}>Edit</Button>
@@ -85,7 +87,9 @@ class ClientList extends Component {
                         <Button color="success" tag={Link} to="/clients/new">Add Client</Button>
                         <Button color="success" tag={Link} to="/clients/youngest">Youngest clients</Button>
                         <Button color="success" tag={Link} to="/clients/linked">Linked clients</Button>
+                        <Button color="primary" tag={Link} to="/managers">Go to managers section</Button>
                     </div>
+
                     <h3>Clients</h3>
                     <Table className="mt-4">
                         <thead>
@@ -97,6 +101,7 @@ class ClientList extends Component {
                             <th width="8%">Age</th>
                             <th width="8%">Link</th>
                             <th width="8%">Link count</th>
+                            <th width="8%">Manager ID</th>
                             <th width="35%">Actions</th>
                         </tr>
                         </thead>
