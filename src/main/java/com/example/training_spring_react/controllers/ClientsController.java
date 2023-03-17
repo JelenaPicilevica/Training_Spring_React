@@ -120,8 +120,16 @@ public class ClientsController {
         //SAVING DATA TO CLIENT_RELATIONS TABLE
         clientRelationsService.setRelationship(savedClient.getId(), savedClient.getParent_id());
 
+
+       //FINDING SAVED CLIENT TO COUNT CHILDS (as now we have id)
+        Client savedClientUpdate = clientRepository.findById(savedClient.getId()).orElseThrow(RuntimeException::new);
+
         //COUNTING CHILDS
-        client.setChildCount(clientRelationsService.findChildrenList(savedClient.getId()));
+        long numOfChilds = clientRelationsService.findChildrenList(savedClientUpdate.getId());
+        savedClientUpdate.setChildCount(numOfChilds);
+
+        //SAVING AGAIN WITH COUNTED CHILDS
+        clientRepository.save(savedClientUpdate);
 
         //RETURNING RESPONSE ENTITY
         return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
