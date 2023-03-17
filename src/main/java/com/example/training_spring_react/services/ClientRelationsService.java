@@ -46,7 +46,7 @@ public class ClientRelationsService {
         //Checking each child of client for next childs and putting them in the list 'newFoundChilds'
         for (int i =0; i<childsOfThisClient.size(); i++){
 
-            newFoundChilds.addAll(clientRelationsRepository.findChildsOfClientParent(newFoundChilds.get(i)));
+            newFoundChilds.addAll(clientRelationsRepository.findChildsOfClientParent(childsOfThisClient.get(i)));
             // !!!!! We need to exclude null values (for direct childs who don't have next childs)
             newFoundChilds.removeIf(Objects::isNull);
 
