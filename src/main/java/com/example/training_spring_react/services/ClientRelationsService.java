@@ -19,25 +19,44 @@ public class ClientRelationsService {
     //Finding childs related to one client
     public Long findChildrenList(long parentID){
 
-        //Direct childs putin the list 'childsOfThisClient'
+        //1. DIRECT CHILDS PUTTING IN THE LIST 'childsOfThisClient'
         List<Long> childsOfThisClient = clientRelationsRepository.findChildsOfClientParent(parentID);
+
+        //2. CREATING RESULT LIST WHERE ALL FOUND CHILD DATA WILL BE STORED AND
+        //   ADDING THERE DIRECT CHILDREN
         List<Long> resultList = new ArrayList<>();
+        resultList.addAll(childsOfThisClient); //Direct childs now are in the result
 
-        //Looking childs for direct childs
+        //3. LOOKING FOR CHILDS OF OUR DIRECT CHILDS
+
+        //List for new found childs, will add there all childs of childs
+        List<Long> newFoundChilds = new ArrayList<>();
+
+        //Checking each child of client for next childs and putting them in the list 'newFoundChilds'
         for (int i =0; i<childsOfThisClient.size(); i++){
-
-            //List for new found childs, adding there all childs of childs
-            List<Long> newFoundChilds = new ArrayList<>();
             newFoundChilds.addAll(clientRelationsRepository.findChildsOfClientParent(newFoundChilds.get(i)));
 
-            //ALL CHILDS (including direct)
+            //4. ADDING ALL FOUND CHILDS OF DIRECT CHILDS TO THE LIST (already included direct childs)
             resultList.addAll(newFoundChilds);
 
+
+            //5. FINDING CHILDS FOR PREVIOUSLY FOUND CHILDS ('ņewFoundChilds')
+            // AND UPDATING 'newFoundChilds' LIST WITH NEW DATA
+
+            // Client => Direct childs => Childs of direct => we are on this level
             while (!newFoundChilds.isEmpty()){
+                List<Long> newListOfChilds = new ArrayList<>();
+
                 for(int j =0; j<newFoundChilds.size(); j++){
-                    newFoundChilds = clientRelationsRepository.findChildsOfClientParent(newFoundChilds.get(j));
-                    resultList.addAll(newFoundChilds);
+                    newListOfChilds.addAll(clientRelationsRepository.findChildsOfClientParent(newFoundChilds.get(j)));
                 }
+
+                //Updating 'NewFoundChilds' list with newly found data
+                newFoundChilds.clear();
+                newFoundChilds.addAll(newListOfChilds);
+
+                //Adding newly found data to the result
+                resultList.addAll(newFoundChilds);
             }
         }
         return (long)resultList.size();
