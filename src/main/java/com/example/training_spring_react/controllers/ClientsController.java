@@ -203,6 +203,7 @@ public class ClientsController {
 
             long currentClientID = currentClient.getId();
             long currentClientParentID = currentClient.getParent_id();
+            //Error here: no results were returned by the query
             clientRelationsService.updateRelationship(currentClientID,currentClientParentID);
 
         }else{
@@ -210,8 +211,8 @@ public class ClientsController {
         }
 
         //COUNTING CHILDS
-        long numOfChilds = clientRelationsService.findChildrenList(currentClient.getId());
-        currentClient.setChildCount(numOfChilds);
+//        long numOfChilds = clientRelationsService.findChildrenList(currentClient.getId());
+//        currentClient.setChildCount(numOfChilds);
 
         //AFTER ALL CHECKINGS SAVE DATA
 

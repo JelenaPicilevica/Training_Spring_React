@@ -1,7 +1,9 @@
 package com.example.training_spring_react.services;
 
 import com.example.training_spring_react.repositories.ClientRelationsRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +75,7 @@ public class ClientRelationsService {
         return true;
     }
 
-    public boolean updateRelationship (long clientID, long parentID){
+    public void updateRelationship (long clientID, long parentID){
         this.clientRelationsRepository.updateRelationsData(parentID,clientID);
-        return true;
     }
 }

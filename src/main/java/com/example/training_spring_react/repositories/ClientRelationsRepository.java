@@ -3,9 +3,11 @@ package com.example.training_spring_react.repositories;
 import com.example.training_spring_react.models.ClientRelations;
 import com.example.training_spring_react.models.Manager;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,8 @@ public interface ClientRelationsRepository extends JpaRepository <ClientRelation
     @Query(value = "INSERT INTO client_relations (child_id, parent_id) VALUES (?1,?2)", nativeQuery = true)
     void insertRelationsData(long clientID, long parentID);
 
+    @Transactional
+    @Modifying
     @Query(value = "UPDATE client_relations SET parent_id = ?1 WHERE child_id = ?2", nativeQuery = true)
     void updateRelationsData(long parentID, long childID);
 
