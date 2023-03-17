@@ -1,7 +1,9 @@
 package com.example.training_spring_react.controllers;
 
 import com.example.training_spring_react.models.Client;
+import com.example.training_spring_react.repositories.ClientRelationsRepository;
 import com.example.training_spring_react.repositories.ClientRepository;
+import com.example.training_spring_react.services.ClientRelationsService;
 import com.example.training_spring_react.services.ManagerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +29,12 @@ public class ClientsController {
     private final ClientRepository clientRepository;
     private final ManagerService managerService;
 
-    public ClientsController(ClientRepository clientRepository, ManagerService managerService) {
+    private final ClientRelationsService clientRelationsService;
+
+    public ClientsController(ClientRepository clientRepository, ManagerService managerService, ClientRelationsRepository clientRelationsRepository, ClientRelationsService clientRelationsService) {
         this.clientRepository = clientRepository;
         this.managerService = managerService;
+        this.clientRelationsService = clientRelationsService;
     }
 
 
@@ -96,11 +101,27 @@ public class ClientsController {
         if (checkManagerExistenceById(client.getManagerID())){
             client.setManagerID(client.getManagerID());
         }else{
-            client.setId(3L);
+            client.setManagerID(3L);
         }
 
-        //SAVING CLIENT AND RETURNING RESPONSE ENTITY
+        //VALIDATION OF PARENT
+
+        long parentIdForChecking = client.getParent_id();
+
+        if(clientRepository.findClientById(parentIdForChecking) != null){
+            client.setParent_id(parentIdForChecking);
+        }else{
+            client.setParent_id(0L);
+        }
+
+        //SAVING CLIENT
         Client savedClient = clientRepository.save(client);
+
+        //SAVING DATA TO CLIENT_RELATIONS TABLE
+        clientRelationsService.setRelationship(savedClient.getId(), savedClient.getParent_id());
+
+
+        //RETURNING RESPONSE ENTITY
         return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
     }
 
@@ -169,6 +190,21 @@ public class ClientsController {
             currentClient.setManagerID(client.getManagerID());
         }else{
             return ResponseEntity.badRequest().body("Manager with this id does NOT exists: " + client.getManagerID());
+        }
+
+        //VALIDATION OF PARENT
+
+        long parentIdForChecking = client.getParent_id();
+
+        if(clientRepository.findClientById(parentIdForChecking) != null){
+            currentClient.setParent_id(parentIdForChecking);
+
+            long currentClientID = currentClient.getId();
+            long currentClientParentID = currentClient.getParent_id();
+            clientRelationsService.updateRelationship(currentClientID,currentClientParentID);
+
+        }else{
+            return ResponseEntity.badRequest().body("Parent with this id does NOT exists: " +client.getParent_id());
         }
 
         //AFTER ALL CHECKINGS SAVE DATA

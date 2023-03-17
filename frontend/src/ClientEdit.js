@@ -12,7 +12,8 @@ class ClientEdit extends Component {
         email: '',
         dob: '',
         link: '',                    //Added for new task => reference to other user
-        managerID: ''
+        managerID: '',
+        parent_id: ''
     };
 
     constructor(props) {
@@ -122,6 +123,12 @@ class ClientEdit extends Component {
                         <Label for="manager">Link to manager</Label>
                         <Input type="text" name="managerID" id="managerID" value={item.managerID || ''}
                                onChange={this.handleChange} autoComplete="managerID"/>
+                    </FormGroup>
+
+                    <FormGroup>
+                        <Label for="parent_id">Link to parent</Label>
+                        <Input type="text" name="parent_id" id="parent_id" value={item.parent_id || ''}
+                               onChange={this.handleChange} autoComplete="parent_id"/>
                     </FormGroup>
 
                     <FormGroup>

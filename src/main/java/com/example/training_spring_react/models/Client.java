@@ -38,9 +38,8 @@ public class Client {
 
     private Long linkCount;  //number of links starting from this client
 
-//    @ManyToOne                                                          //one manager can have many clients
-//    @PrimaryKeyJoinColumn(name = "manager_id", referencedColumnName = "id")
-//    private Manager manager;
+//    @OneToOne(mappedBy = "client")
+//    private ClientRelations clientRelations;
 
 
     @JoinColumn (name = "manager_id", insertable = false, updatable = false)
@@ -50,11 +49,5 @@ public class Client {
     @Column(name = "manager_id")
     private Long managerID;
 
-    //Additional constructor if manager is not inputted
-//    public Client(String name, String email, LocalDate dob, Long link) {
-//        this.name = name;
-//        this.email = email;
-//        this.dob = dob;
-//        this.link = link;
-//    }
+    private Long parent_id;
 }
