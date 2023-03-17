@@ -120,6 +120,8 @@ public class ClientsController {
         //SAVING DATA TO CLIENT_RELATIONS TABLE
         clientRelationsService.setRelationship(savedClient.getId(), savedClient.getParent_id());
 
+        //COUNTING CHILDS
+        client.setChildCount(clientRelationsService.findChildrenList(savedClient.getId()));
 
         //RETURNING RESPONSE ENTITY
         return ResponseEntity.created(new URI("/clients/" + savedClient.getId())).body(savedClient);
@@ -206,6 +208,10 @@ public class ClientsController {
         }else{
             return ResponseEntity.badRequest().body("Parent with this id does NOT exists: " +client.getParent_id());
         }
+
+        //COUNTING CHILDS
+        long numOfChilds = clientRelationsService.findChildrenList(currentClient.getId());
+        currentClient.setChildCount(numOfChilds);
 
         //AFTER ALL CHECKINGS SAVE DATA
 

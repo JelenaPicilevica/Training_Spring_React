@@ -38,6 +38,8 @@ public class Client {
 
     private Long linkCount;  //number of links starting from this client
 
+    private Long childCount;  //number of childs starting from this client
+
 //    @OneToOne(mappedBy = "client")
 //    private ClientRelations clientRelations;
 

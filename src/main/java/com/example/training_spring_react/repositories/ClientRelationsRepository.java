@@ -13,6 +13,7 @@ import java.util.List;
 @Repository
 public interface ClientRelationsRepository extends JpaRepository <ClientRelations, Long> {
 
+
     @Query(value = "INSERT INTO client_relations (child_id, parent_id) VALUES (?1,?2)", nativeQuery = true)
     void insertRelationsData(long clientID, long parentID);
 
