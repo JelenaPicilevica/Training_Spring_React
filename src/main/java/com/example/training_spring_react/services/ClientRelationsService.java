@@ -16,16 +16,23 @@ public class ClientRelationsService {
     }
 
 
-    //Finding childs related to one client
+    //COUNTING ALL CHILDS AND SUB-CHILDS RELATED TO ONE CLIENT
     public Long findChildrenList(long parentID){
 
-        //1. DIRECT CHILDS PUTTING IN THE LIST 'childsOfThisClient'
-        List<Long> childsOfThisClient = clientRelationsRepository.findChildsOfClientParent(parentID);
-
-        //2. CREATING RESULT LIST WHERE ALL FOUND CHILD DATA WILL BE STORED AND
-        //   ADDING THERE DIRECT CHILDREN
+        //0. LIST FOR DIRECT CHILDS (childsOfThisClient) AND FOR ALL CHILDS (resultList)
+        List<Long> childsOfThisClient = new ArrayList<>();
         List<Long> resultList = new ArrayList<>();
-        resultList.addAll(childsOfThisClient); //Direct childs now are in the result
+
+
+        //1. IF DIRECT CHILDS EXIST => PUTTING THEM IN THE LIST 'childsOfThisClient'
+
+        if(clientRelationsRepository.findChildsOfClientParent(parentID) != null){
+
+            childsOfThisClient = clientRelationsRepository.findChildsOfClientParent(parentID);
+            resultList.addAll(childsOfThisClient); //Direct childs now are in the result
+        }else{
+            return 0L;
+        }
 
         //3. LOOKING FOR CHILDS OF OUR DIRECT CHILDS
 
@@ -54,7 +61,6 @@ public class ClientRelationsService {
                 //Updating 'NewFoundChilds' list with newly found data
                 newFoundChilds.clear();
                 newFoundChilds.addAll(newListOfChilds);
-
                 //Adding newly found data to the result
                 resultList.addAll(newFoundChilds);
             }
