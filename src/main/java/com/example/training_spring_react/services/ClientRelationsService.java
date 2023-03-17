@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ClientRelationsService {
@@ -21,7 +22,7 @@ public class ClientRelationsService {
     //COUNTING ALL CHILDS AND SUB-CHILDS RELATED TO ONE CLIENT
     public Long findChildrenList(long parentID){
 
-        //0. LIST FOR DIRECT CHILDS (childsOfThisClient) AND FOR ALL CHILDS (resultList)
+        //0. EMPTY LISTS FOR DIRECT CHILDS (childsOfThisClient) AND FOR ALL CHILDS (resultList)
         List<Long> childsOfThisClient = new ArrayList<>();
         List<Long> resultList = new ArrayList<>();
 
@@ -41,13 +42,21 @@ public class ClientRelationsService {
         //List for new found childs, will add there all childs of childs
         List<Long> newFoundChilds = new ArrayList<>();
 
+
         //Checking each child of client for next childs and putting them in the list 'newFoundChilds'
         for (int i =0; i<childsOfThisClient.size(); i++){
+
             newFoundChilds.addAll(clientRelationsRepository.findChildsOfClientParent(newFoundChilds.get(i)));
+            // !!!!! We need to exclude null values (for direct childs who don't have next childs)
+            newFoundChilds.removeIf(Objects::isNull);
+
 
             //4. ADDING ALL FOUND CHILDS OF DIRECT CHILDS TO THE LIST (already included direct childs)
             resultList.addAll(newFoundChilds);
 
+            if (newFoundChilds.isEmpty()){
+                return (long) resultList.size();
+            }
 
             //5. FINDING CHILDS FOR PREVIOUSLY FOUND CHILDS ('ņewFoundChilds')
             // AND UPDATING 'newFoundChilds' LIST WITH NEW DATA
@@ -60,9 +69,11 @@ public class ClientRelationsService {
                     newListOfChilds.addAll(clientRelationsRepository.findChildsOfClientParent(newFoundChilds.get(j)));
                 }
 
-                //Updating 'NewFoundChilds' list with newly found data
+                //Updating 'NewFoundChilds' list with newly found data, taking off null values
                 newFoundChilds.clear();
                 newFoundChilds.addAll(newListOfChilds);
+                newFoundChilds.removeIf(Objects::isNull);
+
                 //Adding newly found data to the result
                 resultList.addAll(newFoundChilds);
             }
