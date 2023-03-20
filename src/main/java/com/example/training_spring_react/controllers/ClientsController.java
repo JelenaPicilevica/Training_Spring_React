@@ -50,6 +50,12 @@ public class ClientsController {
         return clientRepository.findYoungestClients();
     }
 
+    //Finding a CEO, path '/clients/CEO'
+    @GetMapping("/CEO")
+    public List<Client> getCEO() {
+        return clientRepository.findCEO();
+    }
+
 
     //Linked client list, path '/clients/linked'
     @GetMapping("/linked")
@@ -219,6 +225,7 @@ public class ClientsController {
 
         //COUNTING CHILDS
         long numOfChilds = clientRelationsService.findChildrenList(currentClient.getId());
+        System.out.println("Number of childs: " + numOfChilds);
         currentClient.setChildCount(numOfChilds);
 
         //AFTER ALL CHECKINGS SAVE DATA

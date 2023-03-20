@@ -11,6 +11,7 @@ import java.util.ArrayList;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
+    //For Youngest Clients page
     @Query(value = "SELECT * FROM clients WHERE age = (SELECT MIN(age)FROM clients)", nativeQuery = true)
     ArrayList<Client> findYoungestClients();
 
@@ -18,9 +19,16 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     @Query(value = "SELECT * FROM clients WHERE link != '0'", nativeQuery = true)
     ArrayList<Client> findLinkedClients();
 
+
+    //For finding a CEO - we look for a client with bigest number of childs
+    @Query(value = "SELECT * FROM clients WHERE child_count = (SELECT MAX(child_count) FROM clients WHERE id != 0)", nativeQuery = true)
+    ArrayList<Client> findCEO();
+
+
+    //Searching client by ID
     Client findClientById(Long id);
 
-
+    //Finding a link related to client for link count
     @Query(value = "SELECT link FROM clients WHERE id= :id", nativeQuery = true)
     Long findLinkByClientId(@Param("id") long id);
 
