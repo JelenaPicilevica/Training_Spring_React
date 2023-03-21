@@ -1,6 +1,6 @@
 # Training_Spring_React
 
-How to run the App
+How to run the App:
 1.	Download file and open through IntelliJ IDEA or other IDE
 2.	Generate React project: npx create-react-app frontend
 3.	Install Bootstrap, React Router, and reactstrap in the frontend directory: npm install --save bootstrap@5.1 react-cookie@4.1.1 react-router-dom@5.3.0 reactstrap@8.10.0
