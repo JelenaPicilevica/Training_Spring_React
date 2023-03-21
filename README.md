@@ -1,5 +1,4 @@
 # Training_Spring_React
-Training project
 
 How to run the App
 1.	Download file and open through IntelliJ IDEA or other IDE
