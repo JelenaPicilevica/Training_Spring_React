@@ -4,7 +4,6 @@ import com.example.training_spring_react.models.Client;
 import com.example.training_spring_react.repositories.ClientRelationsRepository;
 import com.example.training_spring_react.repositories.ClientRepository;
 import com.example.training_spring_react.services.ClientRelationsService;
-import com.example.training_spring_react.services.ManagerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -27,13 +26,12 @@ public class ClientsController {
 
     //Getting ClientRepository object and adding in constructor
     private final ClientRepository clientRepository;
-    private final ManagerService managerService;
-
     private final ClientRelationsService clientRelationsService;
 
-    public ClientsController(ClientRepository clientRepository, ManagerService managerService, ClientRelationsRepository clientRelationsRepository, ClientRelationsService clientRelationsService) {
+    //    private final ManagerService managerService;
+
+    public ClientsController(ClientRepository clientRepository, ClientRelationsRepository clientRelationsRepository, ClientRelationsService clientRelationsService) {
         this.clientRepository = clientRepository;
-        this.managerService = managerService;
         this.clientRelationsService = clientRelationsService;
     }
 
@@ -99,19 +97,8 @@ public class ClientsController {
             client.setLinkCount(0L);  //if link was set incorrectly => total link count = 0
         }
 
-        //VALIDATION OF MANAGER ID
-
-        //If manager with such id found (true) we set it to client
-        //If manager with such id NOT found (false) we set manager id as '0'
-
-        if (checkManagerExistenceById(client.getManagerID())){
-            client.setManagerID(client.getManagerID());
-        }else{
-            client.setManagerID(3L);
-        }
 
         //VALIDATION OF PARENT
-
         long parentIdForChecking = client.getParent_id();
 
         if(clientRepository.findClientById(parentIdForChecking) != null){
@@ -119,6 +106,17 @@ public class ClientsController {
         }else{
             client.setParent_id(0L);
         }
+
+        //VALIDATION OF MANAGER ID
+
+        //If manager with such id found (true) we set it to client
+        //If manager with such id NOT found (false) we set manager id as '0'
+
+//        if (checkManagerExistenceById(client.getManagerID())){
+//            client.setManagerID(client.getManagerID());
+//        }else{
+//            client.setManagerID(3L);
+//        }
 
         //SAVING CLIENT
         Client savedClient = clientRepository.save(client);
@@ -202,11 +200,12 @@ public class ClientsController {
         //If manager with such id found (true) we set it to client
         //If manager with such id NOT found (false) we don't save client update
 
-        if (checkManagerExistenceById(client.getManagerID())){            //method takes entered manager id for this client
-            currentClient.setManagerID(client.getManagerID());
-        }else{
-            return ResponseEntity.badRequest().body("Manager with this id does NOT exists: " + client.getManagerID());
-        }
+//        if (checkManagerExistenceById(client.getManagerID())){            //method takes entered manager id for this client
+//            currentClient.setManagerID(client.getManagerID());
+//        }else{
+//            return ResponseEntity.badRequest().body("Manager with this id does NOT exists: " + client.getManagerID());
+//        }
+
 
         //VALIDATION OF PARENT
 
@@ -264,14 +263,14 @@ public class ClientsController {
     }
 
 
-    public Boolean checkManagerExistenceById (Long managerId){
-
-        if (managerService.findManagerById(managerId) != null){
-            return true;
-        }else {
-            return false;
-        }
-    }
+//    public Boolean checkManagerExistenceById (Long managerId){
+//
+//        if (managerService.findManagerById(managerId) != null){
+//            return true;
+//        }else {
+//            return false;
+//        }
+//    }
 
 
 }
