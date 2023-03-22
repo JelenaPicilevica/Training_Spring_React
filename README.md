@@ -4,9 +4,11 @@ How to run the App:
 1.	Download file and open through IntelliJ IDEA or other IDE
 2.	Generate React project: npm install
 3.	Install Bootstrap, React Router, and reactstrap in the frontend directory: npm install --save bootstrap@5.1 react-cookie@4.1.1 react-router-dom@5.3.0 reactstrap@8.10.0
-4.	Create database “testdb4”, if you want to add database with other name, change the name also in application.properties file
-5.	Change password to yours in  application.properties file
-6.	Run backend and frontend (npm start)
+4.	Run the following command: yarn upgrade react-router-dom@5.2.0
+5.	In package.json file update "react-router-dom" version to 5.2.0 and run command npm install
+6.	Create database “testdb4”, if you want to add database with other name, change the name also in application.properties file
+7.	Change password to yours in  application.properties file
+8.	Run backend and frontend (npm start)
 
 Additional info for successful run of the app:
 1.	In order to use Login functionality, please, add user in table ‘user’ in “testdb4”  database
