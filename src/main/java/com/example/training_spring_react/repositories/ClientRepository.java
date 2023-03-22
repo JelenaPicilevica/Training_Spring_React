@@ -24,6 +24,8 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     @Query(value = "SELECT * FROM clients WHERE child_count = (SELECT MAX(child_count) FROM clients WHERE id != 0)", nativeQuery = true)
     ArrayList<Client> findCEO();
 
+    @Query(value = "SELECT * FROM clients", nativeQuery = true)
+    ArrayList<Client> findAllClients();
 
     //Searching client by ID
     Client findClientById(Long id);
