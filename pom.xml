@@ -35,10 +35,10 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-security</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-security</artifactId>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -57,11 +57,11 @@
             <scope>runtime</scope>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>com.h2database</groupId>-->
-<!--            <artifactId>h2</artifactId>-->
-<!--            <scope>runtime</scope>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.h2database</groupId>-->
+        <!--            <artifactId>h2</artifactId>-->
+        <!--            <scope>runtime</scope>-->
+        <!--        </dependency>-->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -81,84 +81,84 @@
         <plugins>
 
 
-<!-- Maven-resources-plugin is responsible for copying our frontend sources to the application target folder-->
+            <!-- Maven-resources-plugin is responsible for copying our frontend sources to the application target folder-->
 
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-resources-plugin</artifactId>-->
-<!--                <version>3.1.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>copy-resources</id>-->
-<!--                        <phase>process-classes</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>copy-resources</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <outputDirectory>${basedir}/target/classes/static</outputDirectory>-->
-<!--                            <resources>-->
-<!--                                <resource>-->
-<!--                                    <directory>frontend/build</directory>-->
-<!--                                </resource>-->
-<!--                            </resources>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-resources-plugin</artifactId>
+                            <version>3.1.0</version>
+                            <executions>
+                                <execution>
+                                    <id>copy-resources</id>
+                                    <phase>process-classes</phase>
+                                    <goals>
+                                        <goal>copy-resources</goal>
+                                    </goals>
+                                    <configuration>
+                                        <outputDirectory>${basedir}/target/classes/static</outputDirectory>
+                                        <resources>
+                                            <resource>
+                                                <directory>frontend/build</directory>
+                                            </resource>
+                                        </resources>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
 
 
-<!-- Front-end-maven-plugin will then be responsible for installing Node.js and Yarn, and then building and testing our frontend application:-->
+            <!-- Front-end-maven-plugin will then be responsible for installing Node.js and Yarn, and then building and testing our frontend application:-->
 
-<!--            <plugin>-->
-<!--                <groupId>com.github.eirslett</groupId>-->
-<!--                <artifactId>frontend-maven-plugin</artifactId>-->
-<!--                <version>${frontend-maven-plugin.version}</version>-->
-<!--                <configuration>-->
-<!--                    <workingDirectory>frontend</workingDirectory>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>install node</id>-->
-<!--                        <goals>-->
-<!--                            <goal>install-node-and-yarn</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <nodeVersion>${node.version}</nodeVersion>-->
-<!--                            <yarnVersion>${yarn.version}</yarnVersion>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>yarn install</id>-->
-<!--                        <goals>-->
-<!--                            <goal>yarn</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>generate-resources</phase>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>yarn test</id>-->
-<!--                        <goals>-->
-<!--                            <goal>yarn</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>test</phase>-->
-<!--                        <configuration>-->
-<!--                            <arguments>test</arguments>-->
-<!--                            <environmentVariables>-->
-<!--                                <CI>true</CI>-->
-<!--                            </environmentVariables>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>yarn build</id>-->
-<!--                        <goals>-->
-<!--                            <goal>yarn</goal>-->
-<!--                        </goals>-->
-<!--                        <phase>compile</phase>-->
-<!--                        <configuration>-->
-<!--                            <arguments>build</arguments>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+                        <plugin>
+                            <groupId>com.github.eirslett</groupId>
+                            <artifactId>frontend-maven-plugin</artifactId>
+                            <version>${frontend-maven-plugin.version}</version>
+                            <configuration>
+                                <workingDirectory>frontend</workingDirectory>
+                            </configuration>
+                            <executions>
+                                <execution>
+                                    <id>install node</id>
+                                    <goals>
+                                        <goal>install-node-and-yarn</goal>
+                                    </goals>
+                                    <configuration>
+                                        <nodeVersion>${node.version}</nodeVersion>
+                                        <yarnVersion>${yarn.version}</yarnVersion>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>yarn install</id>
+                                    <goals>
+                                        <goal>yarn</goal>
+                                    </goals>
+                                    <phase>generate-resources</phase>
+                                </execution>
+                                <execution>
+                                    <id>yarn test</id>
+                                    <goals>
+                                        <goal>yarn</goal>
+                                    </goals>
+                                    <phase>test</phase>
+                                    <configuration>
+                                        <arguments>test</arguments>
+                                        <environmentVariables>
+                                            <CI>true</CI>
+                                        </environmentVariables>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>yarn build</id>
+                                    <goals>
+                                        <goal>yarn</goal>
+                                    </goals>
+                                    <phase>compile</phase>
+                                    <configuration>
+                                        <arguments>build</arguments>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                        </plugin>
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>

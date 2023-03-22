@@ -103,6 +103,7 @@ public class ClientsController {
 
         if(clientRepository.findClientById(parentIdForChecking) != null){
             client.setParent_id(parentIdForChecking);
+            //UPDATE: countChilds for client.getParentID
         }else{
             client.setParent_id(0L);
         }
@@ -129,8 +130,8 @@ public class ClientsController {
         Client savedClientUpdate = clientRepository.findById(savedClient.getId()).orElseThrow(RuntimeException::new);
 
         //COUNTING CHILDS
-        long numOfChilds = clientRelationsService.findChildrenList(savedClientUpdate.getId());
-        savedClientUpdate.setChildCount(numOfChilds);
+//        long numOfChilds = clientRelationsService.findChildrenList(savedClientUpdate.getId());
+//        savedClientUpdate.setChildCount(numOfChilds);
 
         //SAVING AGAIN WITH COUNTED CHILDS
         clientRepository.save(savedClientUpdate);
@@ -223,9 +224,9 @@ public class ClientsController {
         }
 
         //COUNTING CHILDS
-        long numOfChilds = clientRelationsService.findChildrenList(currentClient.getId());
-        System.out.println("Number of childs: " + numOfChilds);
-        currentClient.setChildCount(numOfChilds);
+//        long numOfChilds = clientRelationsService.findChildrenList(currentClient.getId());
+//        System.out.println("Number of childs: " + numOfChilds);
+//        currentClient.setChildCount(numOfChilds);
 
         //AFTER ALL CHECKINGS SAVE DATA
 

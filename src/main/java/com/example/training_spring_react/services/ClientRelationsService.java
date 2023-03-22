@@ -29,13 +29,23 @@ public class ClientRelationsService {
 
         //1. IF DIRECT CHILDS EXIST => PUTTING THEM IN THE LIST 'childsOfThisClient'
 
-        if(clientRelationsRepository.findChildsOfClientParent(parentID) != null){
+        childsOfThisClient = clientRelationsRepository.findChildsOfClientParent(parentID);
 
-            childsOfThisClient = clientRelationsRepository.findChildsOfClientParent(parentID);
+        if(childsOfThisClient != null){
             resultList.addAll(childsOfThisClient); //Direct childs now are in the result
         }else{
             return 0L;
         }
+
+        //Previous version of chapter 1:
+
+//        if(clientRelationsRepository.findChildsOfClientParent(parentID) != null){
+//
+//            childsOfThisClient = clientRelationsRepository.findChildsOfClientParent(parentID);
+//            resultList.addAll(childsOfThisClient); //Direct childs now are in the result
+//        }else{
+//            return 0L;
+//        }
 
         //3. LOOKING FOR CHILDS OF OUR DIRECT CHILDS
 

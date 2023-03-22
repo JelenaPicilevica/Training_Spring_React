@@ -67,7 +67,7 @@ class ClientList extends Component {
                 <td>{client.linkCount}</td>
                 {/*<td>{client.managerID}</td>*/}
                 <td>{client.parent_id}</td>
-                <td>{client.childCount}</td>
+                {/*<td>{client.childCount}</td>*/}
 
                 <td>
                     <ButtonGroup>
@@ -106,7 +106,7 @@ class ClientList extends Component {
                             <th width="8%">Link count</th>
                             {/*<th width="8%">Manager ID</th>*/}
                             <th width="8%">Parent ID</th>
-                            <th width="8%">Child count</th>
+                            {/*<th width="8%">Child count</th>*/}
                             <th width="35%">Actions</th>
                         </tr>
                         </thead>
