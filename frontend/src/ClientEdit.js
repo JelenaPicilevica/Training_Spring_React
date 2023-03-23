@@ -127,7 +127,7 @@ class ClientEdit extends Component {
 
                     <FormGroup>
                         <Label for="parent_id">Link to parent ID (if no parent => enter 0)</Label>
-                        <Input type="text" name="parent_id" id="parent_id" value={item.parent_id || ''}
+                        <Input type="text" name="parentID" id="parentID" value={item.parentID || ''}
                                onChange={this.handleChange} autoComplete="parent_id"/>
                     </FormGroup>
 

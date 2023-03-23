@@ -48,7 +48,7 @@ class ClientCEOByLevels extends Component {
                 {/*<td>{client.link}</td>*/}
                 {/*<td>{client.linkCount}</td>*/}
                 {/*<td>{client.managerID}</td>*/}
-                <td>{client.parent_id}</td>
+                <td>{client.parentID}</td>
                 {/*<td>{client.childCount}</td>*/}
                 <td>{client.levelsBelow}</td>
             </tr>
