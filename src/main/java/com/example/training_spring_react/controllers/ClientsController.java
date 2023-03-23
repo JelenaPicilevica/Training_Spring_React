@@ -78,10 +78,7 @@ public class ClientsController {
     }
 
 
-
-
-
-    //Finding a CEO, path '/clients/CEO'
+    //Finding a CEO by child count, path '/clients/CEO'
     @GetMapping("/CEO")
     public List<Client> getCEO() {
 
@@ -130,28 +127,20 @@ public class ClientsController {
     @PostMapping
     public ResponseEntity createClient(@Valid @RequestBody Client client) throws URISyntaxException {
 
-        //SETTING AGE AUTOMATICALLY
+        // 1. SETTING AGE AUTOMATICALLY
         client.setAge(Period.between(client.getDob(), LocalDate.now()).getYears());
 
-        /* VALIDATION OF LINK - Checking if Link field is empty
+        /* 2. VALIDATION OF LINK - Checking if Link field is empty
              - if yes - we set up link and link count as 0
              - if not - checking in DB for linked user => if exists - put entered data as link,
                                                           if not exists - put 0 values */
         linkCheckAndSetUp(client);
 
-        //VALIDATION OF PARENT
-        if(client.getParent_id() == null){
-            client.setParent_id(0L);
-        }else{
-            long parentIdForChecking = client.getParent_id();
-
-            if(clientRepository.findClientById(parentIdForChecking) != null){
-                client.setParent_id(parentIdForChecking);
-            }else{
-                client.setParent_id(0L);
-            }
-
-        }
+         /* 3. VALIDATION OF PARENT ID - Checking if parent field is empty
+             - if yes - we set up parent id as 0
+             - if not - checking in DB for parent id => if exists - put entered data as parent id,
+                                                       if not exists - put 0 value as parent id */
+        parentIdCheck(client);
 
         //VALIDATION OF MANAGER ID
 
@@ -164,10 +153,10 @@ public class ClientsController {
 //            client.setManagerID(3L);
 //        }
 
-        //SAVING CLIENT
+        // 4. SAVING CLIENT
         Client savedClient = clientRepository.save(client);
 
-        //SAVING DATA TO CLIENT_RELATIONS TABLE
+        //4. SAVING DATA TO CLIENT_RELATIONS TABLE
         clientRelationsService.setRelationship(savedClient.getId(), savedClient.getParent_id());
 
        //FINDING SAVED CLIENT TO COUNT CHILDS (as now we have id)
@@ -221,28 +210,13 @@ public class ClientsController {
 //        currentClient.setManagerID(client.getManagerID());
         currentClient.setAge(Period.between(currentClient.getDob(), LocalDate.now()).getYears());
 
-        //VALIDATION OF LINK
-
-        //Reference to other client entered by user
-        long referenceToOtherClient = client.getLink();
-
-        if(client.getParent_id() == null){
-            currentClient.setParent_id(0L);
-        }else{
-            //If client with id defined as reference exists or value is 0 => we set this link to editable client as reference
-            if(clientRepository.findClientById(referenceToOtherClient) != null || referenceToOtherClient == 0){
-                currentClient.setLink(referenceToOtherClient);
-
-                //Calculating number of links with function and set this number to client
-                long numberOfLinks = countLinks(currentClient);
-                currentClient.setLinkCount(numberOfLinks);
-
-                //If client with id defined as reference NOT exists => we don't save client
-            }else{
-                return ResponseEntity.badRequest().body("This client link does NOT exists: " + referenceToOtherClient);
-            }
-        }
-
+       /* VALIDATION OF LINK - Checking if Link field is empty
+             - if yes - we set up link and link count as 0
+             - if not - checking in DB for linked user => if exists - put entered data as link,
+                                                          if not exists - put 0 values */
+        linkCheckAndSetUp(client);
+        currentClient.setLink(client.getLink());
+        currentClient.setLinkCount(client.getLinkCount());
 
         //VALIDATION OF MANAGER ID
 
@@ -256,20 +230,12 @@ public class ClientsController {
 //        }
 
 
-        //VALIDATION OF PARENT
-
-        long parentIdForChecking = client.getParent_id();
-
-        if(clientRepository.findClientById(parentIdForChecking) != null){
-            currentClient.setParent_id(parentIdForChecking);
-
-            long currentClientID = currentClient.getId();
-            long currentClientParentID = currentClient.getParent_id();
-            clientRelationsService.updateRelationship(currentClientID,currentClientParentID);
-
-        }else{
-            return ResponseEntity.badRequest().body("Parent with this id does NOT exists: " +client.getParent_id());
-        }
+         /* VALIDATION OF PARENT ID - Checking if parent field is empty
+             - if yes - we set up parent id as 0
+             - if not - checking in DB for parent id => if exists - put entered data as parent id,
+                                                       if not exists - put 0 value as parent id */
+        parentIdCheck(client);
+        currentClient.setParent_id(client.getParent_id());
 
         //COUNTING CHILDS
 //        long numOfChilds = clientRelationsService.findChildrenList(currentClient.getId());
@@ -289,7 +255,6 @@ public class ClientsController {
         clientRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
-
 
 
     //Method for link counting
@@ -312,29 +277,45 @@ public class ClientsController {
         return countingNumOfLinks;
     }
 
-    public void linkCheckAndSetUp (Client client){
+    public void linkCheckAndSetUp (Client client) {
 
-        if(client.getLink()==null){
+        if (client.getLink() == null) {
             client.setLink(0L);
             client.setLinkCount(0L);  //if link was set incorrectly => total link count = 0
-        }else{
+        } else {
             //Reference to other client entered by user
             long referenceToOtherClient = client.getLink();
 
             //1. If client with id defined as reference exists or link is 0 => counting number of links and set to client
-            if(clientRepository.findClientById(referenceToOtherClient) != null){
+            if (clientRepository.findClientById(referenceToOtherClient) != null) {
 
                 //Calculating number of links with function and set this number to client
                 long numberOfLinks = countLinks(client);
                 client.setLinkCount(numberOfLinks);
 
                 //2. If client with id defined as reference NOT exists => we set link as 0 and accordingly link count as 0
-            }else{
+            } else {
                 client.setLink(0L);
                 client.setLinkCount(0L);  //if link was set incorrectly => total link count = 0
             }
         }
 
+    }
+
+        public void parentIdCheck (Client client){
+
+            if(client.getParent_id() == null){
+                client.setParent_id(0L);
+            }else{
+                long parentIdForChecking = client.getParent_id();
+
+                if(clientRepository.findClientById(parentIdForChecking) != null){
+                    client.setParent_id(parentIdForChecking);
+                }else{
+                    client.setParent_id(0L);
+                }
+            }
+        }
 
 //    public Boolean checkManagerExistenceById (Long managerId){
 //
@@ -347,4 +328,4 @@ public class ClientsController {
 
 
 }
-}
+
