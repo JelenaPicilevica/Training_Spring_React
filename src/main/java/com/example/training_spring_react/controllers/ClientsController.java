@@ -157,7 +157,7 @@ public class ClientsController {
         Client savedClient = clientRepository.save(client);
 
         //4. SAVING DATA TO CLIENT_RELATIONS TABLE
-        clientRelationsService.setRelationship(savedClient.getId(), savedClient.getParent_id());
+        clientRelationsService.setRelationship(savedClient.getId(), savedClient.getParentID());
 
        //FINDING SAVED CLIENT TO COUNT CHILDS (as now we have id)
 //        Client savedClientUpdate = clientRepository.findById(savedClient.getId()).orElseThrow(RuntimeException::new);
@@ -235,7 +235,7 @@ public class ClientsController {
              - if not - checking in DB for parent id => if exists - put entered data as parent id,
                                                        if not exists - put 0 value as parent id */
         parentIdCheck(client);
-        currentClient.setParent_id(client.getParent_id());
+        currentClient.setParentID(client.getParentID());
 
         //COUNTING CHILDS
 //        long numOfChilds = clientRelationsService.findChildrenList(currentClient.getId());
@@ -304,15 +304,15 @@ public class ClientsController {
 
         public void parentIdCheck (Client client){
 
-            if(client.getParent_id() == null){
-                client.setParent_id(0L);
+            if(client.getParentID() == null){
+                client.setParentID(0L);
             }else{
-                long parentIdForChecking = client.getParent_id();
+                long parentIdForChecking = client.getParentID();
 
                 if(clientRepository.findClientById(parentIdForChecking) != null){
-                    client.setParent_id(parentIdForChecking);
+                    client.setParentID(parentIdForChecking);
                 }else{
-                    client.setParent_id(0L);
+                    client.setParentID(0L);
                 }
             }
         }

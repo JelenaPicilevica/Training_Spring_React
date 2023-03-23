@@ -40,7 +40,7 @@ public class Client {
 
     private Long childCount;  //number of childs starting from this client
 
-    private Long parent_id;
+    private Long parentID;
 
     private Long levelsBelow;
 
