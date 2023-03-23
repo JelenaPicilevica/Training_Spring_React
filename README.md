@@ -16,5 +16,6 @@ Additional info for successful run of the app:
 Description: We need it as id ‘0’ will be used for clients with no parent
 3.	Please note that link to other user is like the link to the lower level, so if you have a link from A to B, don’t put the link from B to A. Example of successful link input:
 A=>B,  B=>C,  C=>D, D=>E .... 
-4.	Don’t forget to input mandatory field birth date (it is used also for age calculation)
-5.	Please note that youngest clients are detected by age, not by their birth date
+4.  If you will provide incorrect link to Other user id or to Parent id, value for this field will be set as 0 
+5.	Don’t forget to input mandatory field birth date (it is used also for age calculation)
+6.	Please note that youngest clients are detected by age, not by their birth date
