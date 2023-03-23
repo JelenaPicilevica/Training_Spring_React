@@ -11,6 +11,7 @@ import ManagerList from "./ManagerList";
 import TopManagerList from "./TopManagerList";
 import WeakestManagerList from "./WeakestManagerList";
 import ClientCEO from "./ClientCEO";
+import ClientCEOByLevels from "./ClientCEOByLevels";
 
 
 
@@ -22,6 +23,7 @@ class App extends Component {
                     <Route path='/' exact={true} component={Home}/>
                     <Route path='/clients' exact={true} component={ClientList}/>
                     <Route path='/clients/CEO' exact={true} component={ClientCEO}/>
+                    <Route path='/clients/CEObyLevels' exact={true} component={ClientCEOByLevels}/>
                     <Route path='/login' component={Login}/>
                     <Route path='/clients/youngest' component={YoungestClientList}/>
                     <Route path='/clients/linked' component={LinkedClientList}/>

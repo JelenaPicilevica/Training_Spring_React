@@ -19,6 +19,73 @@ public class ClientRelationsService {
     }
 
 
+    //COUNTING LEVELS UNDER ONE CLIENT (levels of childs)
+    public Long findNumOfLevels(long parentID){
+
+        //0. EMPTY LISTS FOR DIRECT CHILDS (childsOfThisClient) AND resultCount for counting
+        List<Long> childsOfThisClient = new ArrayList<>();
+        long resultCount = 0;
+
+        //1. IF DIRECT CHILDS EXIST => PUTTING THEM IN THE LIST 'childsOfThisClient' and counting +1
+           //IF NOT EXIST => return resultCount ('0')
+
+        childsOfThisClient = clientRelationsRepository.findChildsOfClientParent(parentID);
+
+        if(childsOfThisClient != null){
+            resultCount += 1;
+        }else{
+            return resultCount;
+        }
+
+        //2. LOOKING FOR CHILDS OF OUR DIRECT CHILDS
+
+        //List for new found childs, will add there all childs of childs
+        List<Long> newFoundChilds = new ArrayList<>();
+
+        //Checking each child of client for next childs and putting them in the list 'newFoundChilds'
+        for (int i =0; i<childsOfThisClient.size(); i++){
+
+            newFoundChilds.addAll(clientRelationsRepository.findChildsOfClientParent(childsOfThisClient.get(i)));
+            // !!!!! We need to exclude null values (for direct childs who don't have next childs)
+            newFoundChilds.removeIf(Objects::isNull);
+
+            //3. IF CHILDS OF CHILDS WERE NOT FOUND => Return result count (= 1 as only direct childs were found)
+            if (newFoundChilds.isEmpty()){
+                return resultCount; //('1' as only direct hilds were found)
+            }
+
+            // 4. ADDING 1 MORE LEVEL FOUND ('2') 1st level => childs  2nd level => childs of childs
+            resultCount+=1;
+
+            //4. FINDING CHILDS FOR PREVIOUSLY FOUND CHILDS ('ņewFoundChilds')
+            // AND UPDATING 'newFoundChilds' LIST WITH NEW DATA
+
+            // Client => Direct childs => Childs of direct => we are on this level
+            while (!newFoundChilds.isEmpty()){
+                List<Long> newListOfChilds = new ArrayList<>();
+
+                for(int j =0; j<newFoundChilds.size(); j++){
+                    newListOfChilds.addAll(clientRelationsRepository.findChildsOfClientParent(newFoundChilds.get(j)));
+                }
+
+                //Updating 'NewFoundChilds' list with newly found data, taking off null values
+                newFoundChilds.clear();
+                newFoundChilds.addAll(newListOfChilds);
+                newFoundChilds.removeIf(Objects::isNull);
+
+                //Counting next level
+                if(newFoundChilds != null){
+                    resultCount += 1;
+                }
+            }
+        }
+        return resultCount;
+    }
+
+
+
+
+
     //COUNTING ALL CHILDS AND SUB-CHILDS RELATED TO ONE CLIENT
     public Long findChildrenList(long parentID){
 
@@ -37,17 +104,7 @@ public class ClientRelationsService {
             return 0L;
         }
 
-        //Previous version of chapter 1:
-
-//        if(clientRelationsRepository.findChildsOfClientParent(parentID) != null){
-//
-//            childsOfThisClient = clientRelationsRepository.findChildsOfClientParent(parentID);
-//            resultList.addAll(childsOfThisClient); //Direct childs now are in the result
-//        }else{
-//            return 0L;
-//        }
-
-        //3. LOOKING FOR CHILDS OF OUR DIRECT CHILDS
+        //2. LOOKING FOR CHILDS OF OUR DIRECT CHILDS
 
         //List for new found childs, will add there all childs of childs
         List<Long> newFoundChilds = new ArrayList<>();
@@ -61,14 +118,14 @@ public class ClientRelationsService {
             newFoundChilds.removeIf(Objects::isNull);
 
 
-            //4. ADDING ALL FOUND CHILDS OF DIRECT CHILDS TO THE LIST (already included direct childs)
+            //3. ADDING ALL FOUND CHILDS OF DIRECT CHILDS TO THE LIST (already included direct childs)
             resultList.addAll(newFoundChilds);
 
             if (newFoundChilds.isEmpty()){
                 return (long) resultList.size();
             }
 
-            //5. FINDING CHILDS FOR PREVIOUSLY FOUND CHILDS ('ņewFoundChilds')
+            //4. FINDING CHILDS FOR PREVIOUSLY FOUND CHILDS ('ņewFoundChilds')
             // AND UPDATING 'newFoundChilds' LIST WITH NEW DATA
 
             // Client => Direct childs => Childs of direct => we are on this level

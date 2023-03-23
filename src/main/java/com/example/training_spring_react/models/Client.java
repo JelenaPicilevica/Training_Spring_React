@@ -40,17 +40,8 @@ public class Client {
 
     private Long childCount;  //number of childs starting from this client
 
-//    @OneToOne(mappedBy = "client")
-//    private ClientRelations clientRelations;
-
     private Long parent_id;
 
-
-//    @JoinColumn (name = "manager_id", insertable = false, updatable = false)
-//    @ManyToOne(targetEntity = Manager.class, fetch = FetchType.EAGER)
-//    private Manager manager;
-
-//    @Column(name = "manager_id")
-//    private Long managerID;
+    private Long levelsBelow;
 
 }

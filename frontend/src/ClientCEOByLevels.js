@@ -10,39 +10,22 @@ has additional buttons in rows with data - Edit & Delete and button 'Add Client'
 Below we wrote only 'remove' function and linked it with the button 'Delete'
  */
 
-class ClientList extends Component {
+class ClientCEOByLevels extends Component {
 
     constructor(props) {
         super(props);
         this.state = {clients: []};     //initial state is empty list
-        this.remove = this.remove.bind(this); //now 'this' points out to object inside 'remove' function (e.g., this.name)
     }
 
 
     //ComponentDidMount function is calling our API to load our client list that is converted in JSON and
     //set as a new state of 'clients'
     componentDidMount() {
-        fetch('/clients')                        //receiving data from 'clients' endpoint
+        fetch('/clients/CEObyLevels')                        //receiving data from 'clients' endpoint
             .then(response => response.json())        //function: 'response' is an argument(data from endpoint), argument should be converted to JSON
             .then(data => this.setState({clients: data})); //function: 'data' is an argument (received data), it set as state to 'clients'
     }
 
-
-    //We'll also include the remove function to handle the DELETE call to the API when we want to
-    //delete a client.
-
-    async remove(id) {
-        await fetch(`/clients/${id}`, {           //receiving data from 'clients/id' endpoint
-            method: 'DELETE',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then(() => {
-            let updatedClients = [...this.state.clients].filter(i => i.id !== id);   //taking of client with deleted id, filter creates a new list with elements that pass a test provided by a function
-            this.setState({clients: updatedClients}); //NEW LIST without deleted id
-        });
-    }
 
     //In addition, we'll create the render function, which will render the HTML with Edit, Delete,
     // and Add Client actions:
@@ -54,8 +37,7 @@ class ClientList extends Component {
             return <p>Loading...</p>;
         }
 
-        //clientList is a table (without headers) of clients with 2 buttons - Edit & Delete, we will display it in 'return'
-
+        //clientList is a table (without headers) of clients with 2 buttons
         const clientList = clients.map(client => {      //going through the list one by one and adding data to table rows
             return <tr key={client.id}>
                 <td style={{whiteSpace: 'nowrap'}}>{client.id}</td>
@@ -63,18 +45,12 @@ class ClientList extends Component {
                 <td>{client.email}</td>
                 <td>{client.dob}</td>
                 <td>{client.age}</td>
-                <td>{client.link}</td>
-                <td>{client.linkCount}</td>
+                {/*<td>{client.link}</td>*/}
+                {/*<td>{client.linkCount}</td>*/}
                 {/*<td>{client.managerID}</td>*/}
                 <td>{client.parent_id}</td>
                 {/*<td>{client.childCount}</td>*/}
-
-                <td>
-                    <ButtonGroup>
-                        <Button size="sm" color="primary" tag={Link} to={"/clients/" + client.id}>Edit</Button>
-                        <Button size="sm" color="danger" onClick={() => this.remove(client.id)}>Delete</Button>
-                    </ButtonGroup>
-                </td>
+                <td>{client.levelsBelow}</td>
             </tr>
         });
 
@@ -84,17 +60,8 @@ class ClientList extends Component {
             <div>
                 <AppNavbar/>
                 <Container fluid>
-                    <div className="float-right">
-                        {/**/}
-                        <Button color="success" tag={Link} to="/clients/new">Add Client</Button>
-                        <Button color="success" tag={Link} to="/clients/youngest">Youngest clients</Button>
-                        <Button color="success" tag={Link} to="/clients/linked">Linked clients</Button>
-                        {/*<Button color="primary" tag={Link} to="/managers">Go to managers section</Button>*/}
-                        <Button color="primary" tag={Link} to="/clients/CEO">Show CEO</Button>
-                        <Button color="primary" tag={Link} to="/clients/CEObyLevels">Show CEO (by levels)</Button>
-                    </div>
 
-                    <h3>Clients</h3>
+                    <h3>CEO (from Client list)</h3>
                     <Table className="mt-4">
                         <thead>
                         <tr>
@@ -103,23 +70,23 @@ class ClientList extends Component {
                             <th width="18%">Email</th>
                             <th width="15%">Date of Birth</th>
                             <th width="8%">Age</th>
-                            <th width="8%">Link</th>
-                            <th width="8%">Link count</th>
+                            {/*<th width="8%">Link</th>*/}
+                            {/*<th width="8%">Link count</th>*/}
                             {/*<th width="8%">Manager ID</th>*/}
                             <th width="8%">Parent ID</th>
-                            {/*<th width="8%">Child count</th>*/}
-                            <th width="35%">Actions</th>
+                            <th width="8%">Levels count</th>
                         </tr>
                         </thead>
                         <tbody>
                         {clientList}
                         </tbody>
                     </Table>
+                    <Button color="secondary" tag={Link} to="/clients">Go back to all clients</Button>
                 </Container>
             </div>
         );
     }
 
 }
-export default ClientList;
+export default ClientCEOByLevels;
 
