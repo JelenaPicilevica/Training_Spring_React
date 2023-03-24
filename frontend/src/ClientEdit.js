@@ -113,11 +113,11 @@ class ClientEdit extends Component {
 
                     {/*Added new field below*/}
 
-                    <FormGroup>
-                        <Label for="link">Link to other user ID (if no link => enter 0)</Label>
-                        <Input type="text" name="link" id="link" value={item.link || ''}
-                               onChange={this.handleChange} autoComplete="link"/>
-                    </FormGroup>
+                    {/*<FormGroup>*/}
+                    {/*    <Label for="link">Link to other user ID (if no link => enter 0)</Label>*/}
+                    {/*    <Input type="text" name="link" id="link" value={item.link || ''}*/}
+                    {/*           onChange={this.handleChange} autoComplete="link"/>*/}
+                    {/*</FormGroup>*/}
 
                     {/*<FormGroup>*/}
                     {/*    <Label for="manager">Link to manager</Label>*/}

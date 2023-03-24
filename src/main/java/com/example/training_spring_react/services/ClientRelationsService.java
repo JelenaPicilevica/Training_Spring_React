@@ -30,11 +30,12 @@ public class ClientRelationsService {
            //IF NOT EXIST => return resultCount ('0')
 
         childsOfThisClient = clientRelationsRepository.findChildsOfClientParent(parentID);
+        childsOfThisClient.removeIf(Objects::isNull);
 
-        if(childsOfThisClient != null){
-            resultCount += 1;
-        }else{
+        if(childsOfThisClient.isEmpty()){
             return resultCount;
+        }else{
+            resultCount += 1;
         }
 
         //2. LOOKING FOR CHILDS OF OUR DIRECT CHILDS
@@ -51,11 +52,11 @@ public class ClientRelationsService {
 
             //3. IF CHILDS OF CHILDS WERE NOT FOUND => Return result count (= 1 as only direct childs were found)
             if (newFoundChilds.isEmpty()){
-                return resultCount; //('1' as only direct hilds were found)
+                return resultCount; //('1' as only direct childs were found)
+            }else {
+                // 4. ADDING 1 MORE LEVEL FOUND ('2') 1st level => childs  2nd level => childs of childs
+                resultCount += 1;
             }
-
-            // 4. ADDING 1 MORE LEVEL FOUND ('2') 1st level => childs  2nd level => childs of childs
-            resultCount+=1;
 
             //4. FINDING CHILDS FOR PREVIOUSLY FOUND CHILDS ('ņewFoundChilds')
             // AND UPDATING 'newFoundChilds' LIST WITH NEW DATA
@@ -83,9 +84,6 @@ public class ClientRelationsService {
     }
 
 
-
-
-
     //COUNTING ALL CHILDS AND SUB-CHILDS RELATED TO ONE CLIENT
     public Long findChildrenList(long parentID){
 
@@ -97,6 +95,7 @@ public class ClientRelationsService {
         //1. IF DIRECT CHILDS EXIST => PUTTING THEM IN THE LIST 'childsOfThisClient'
 
         childsOfThisClient = clientRelationsRepository.findChildsOfClientParent(parentID);
+        childsOfThisClient.removeIf(Objects::isNull);
 
         if(childsOfThisClient != null){
             resultList.addAll(childsOfThisClient); //Direct childs now are in the result
@@ -155,5 +154,9 @@ public class ClientRelationsService {
 
     public void updateRelationship (long clientID, long parentID){
         this.clientRelationsRepository.updateRelationsData(parentID,clientID);
+    }
+
+    public void deleteRelationship(long clientID){
+        clientRelationsRepository.deleteByChildID(clientID);
     }
 }

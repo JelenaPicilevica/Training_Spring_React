@@ -34,14 +34,14 @@ public class Client {
     private Integer age;        //calculated automatically from dob
 
     //@Column(columnDefinition = "long default 0")
-    private Long link;  //link to other client
+//    private Long link;  //link to other client
 
-    private Long linkCount;  //number of links starting from this client
+//    private Long linkCount;  //number of links starting from this client
 
     private Long childCount;  //number of childs starting from this client
 
     private Long parentID;
 
-    private Long levelsBelow;
+  //  private Long levelsBelow;
 
 }

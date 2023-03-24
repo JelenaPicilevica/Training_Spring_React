@@ -50,7 +50,7 @@ class ClientCEOByLevels extends Component {
                 {/*<td>{client.managerID}</td>*/}
                 <td>{client.parentID}</td>
                 {/*<td>{client.childCount}</td>*/}
-                <td>{client.levelsBelow}</td>
+                {/*<td>{client.levelsBelow}</td>*/}
             </tr>
         });
 
@@ -74,7 +74,7 @@ class ClientCEOByLevels extends Component {
                             {/*<th width="8%">Link count</th>*/}
                             {/*<th width="8%">Manager ID</th>*/}
                             <th width="8%">Parent ID</th>
-                            <th width="8%">Levels count</th>
+                            {/*<th width="8%">Levels count</th>*/}
                         </tr>
                         </thead>
                         <tbody>

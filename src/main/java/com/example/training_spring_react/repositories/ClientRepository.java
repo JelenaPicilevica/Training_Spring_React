@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
@@ -25,14 +26,17 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
     ArrayList<Client> findCEO();
 
     //For finding a CEO by levels - we look for a client with bigest number of levels below
-    @Query(value = "SELECT * FROM clients WHERE levels_below = (SELECT MAX(levels_below) FROM clients WHERE id != 0)", nativeQuery = true)
-    ArrayList<Client> findCEObyLevels();
+//    @Query(value = "SELECT * FROM clients WHERE levels_below = (SELECT MAX(levels_below) FROM clients WHERE id != 0)", nativeQuery = true)
+//    ArrayList<Client> findCEObyLevels();
 
     @Query(value = "SELECT * FROM clients", nativeQuery = true)
     ArrayList<Client> findAllClients();
 
     //Searching client by ID
     Client findClientById(Long id);
+
+    //Searching clients by their IDs that were put in the list (we use it for finding a CEO)
+    ArrayList<Client> findClientByIdIn(List<Long> listOfClientIDs);
 
     //Finding a link related to client for link count
     @Query(value = "SELECT link FROM clients WHERE id= :id", nativeQuery = true)

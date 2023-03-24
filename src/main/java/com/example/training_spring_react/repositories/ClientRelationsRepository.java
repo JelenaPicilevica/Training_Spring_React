@@ -24,6 +24,10 @@ public interface ClientRelationsRepository extends JpaRepository <ClientRelation
     @Query(value = "UPDATE client_relations SET parent_id = ?1 WHERE child_id = ?2", nativeQuery = true)
     void updateRelationsData(long parentID, long childID);
 
+    @Transactional
+    @Modifying
+    void deleteByChildID(long clientID);
+
 
 
     //Finding childs of parent client

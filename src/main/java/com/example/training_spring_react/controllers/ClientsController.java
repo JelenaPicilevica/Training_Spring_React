@@ -4,6 +4,7 @@ import com.example.training_spring_react.models.Client;
 import com.example.training_spring_react.repositories.ClientRelationsRepository;
 import com.example.training_spring_react.repositories.ClientRepository;
 import com.example.training_spring_react.services.ClientRelationsService;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -15,10 +16,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -57,22 +55,47 @@ public class ClientsController {
         //1. FINDING ALL CLIENTS, PUTTING THEM INTO THE LIST
         List<Client> allClientList = clientRepository.findAllClients();
 
-        //2. CALCULATING LEVELS BELOW FOR EACH CLIENT FROM THE LIST
+        //2. CREATING A MAP WHERE CLIENT ID AND CALCULATED LEVELS WILL BE STORED
+        Map<Long, Long> clientIdAndLevelCount = new HashMap<>();
+
+        //3. CALCULATING LEVELS BELOW FOR EACH CLIENT FROM THE LIST
+
+        long levelCount;
+
         for(int i = 0; i< allClientList.size(); i++){
 
-            //2.1. currentClient => client found in DB by id
+            //3.1. currentClient => client found in DB by id
             Client currentClient = clientRepository.findById(allClientList.get(i).getId()).orElseThrow(RuntimeException::new);
 
-            //2.2. Calculating levels for currentClient and setting this number as levelsBelow value
-            long levelCount = clientRelationsService.findNumOfLevels(currentClient.getId());
-            currentClient.setLevelsBelow(levelCount);
+            //3.2. Calculating levels for currentClient and setting this number as levelsBelow value
 
-            //2.3. Saving updated client
-            clientRepository.save(currentClient);
+            if(currentClient.getId() == 0){
+                levelCount = 0;
+            }else{
+                levelCount = clientRelationsService.findNumOfLevels(currentClient.getId());
+            }
+
+            //4. PUTTING CLIENT ID AND LEVEL COUNT INTO MAP
+            clientIdAndLevelCount.put(currentClient.getId(), levelCount);
         }
 
-        //3. WHEN LEVELS FOR ALL CLIENTS CALCULATED => WE SHOULD FIND CEO
-        ArrayList<Client> foundCEObyLevels = clientRepository.findCEObyLevels();
+        //5. WHEN LEVELS FOR ALL CLIENTS CALCULATED => WE SHOULD FIND CLIENT IDs THAT ARE CEO
+
+        //5.1 Looking for MAX calculated level value in Map:
+        long maxValueInMap=(Collections.max(clientIdAndLevelCount.values()));
+
+        //5.2 Creating List where will be stored client IDs containing MAX found level value:
+        List <Long> idListOfCEO = new ArrayList<>();
+
+        //5.3 Looking for keys (=client IDs) containing MAX value and putting them into the list:
+        for (Map.Entry<Long, Long> entry : clientIdAndLevelCount.entrySet()) {  // Iterate through hashmap
+            if (entry.getValue()==maxValueInMap) {
+                idListOfCEO.add(entry.getKey());
+            }
+        }
+
+        //6. WHEN CLIENTS ID WITH MAX LEVEL COUNT PUT IN THE LIST => FINDING A CEO
+        ArrayList<Client> foundCEObyLevels = clientRepository.findClientByIdIn(idListOfCEO);
 
         return foundCEObyLevels;
     }
@@ -134,7 +157,7 @@ public class ClientsController {
              - if yes - we set up link and link count as 0
              - if not - checking in DB for linked user => if exists - put entered data as link,
                                                           if not exists - put 0 values */
-        linkCheckAndSetUp(client);
+//        linkCheckAndSetUp(client);
 
          /* 3. VALIDATION OF PARENT ID - Checking if parent field is empty
              - if yes - we set up parent id as 0
@@ -214,9 +237,9 @@ public class ClientsController {
              - if yes - we set up link and link count as 0
              - if not - checking in DB for linked user => if exists - put entered data as link,
                                                           if not exists - put 0 values */
-        linkCheckAndSetUp(client);
-        currentClient.setLink(client.getLink());
-        currentClient.setLinkCount(client.getLinkCount());
+//        linkCheckAndSetUp(client);
+//        currentClient.setLink(client.getLink());
+//        currentClient.setLinkCount(client.getLinkCount());
 
         //VALIDATION OF MANAGER ID
 
@@ -253,54 +276,55 @@ public class ClientsController {
     @DeleteMapping("/{id}")
     public ResponseEntity deleteClient(@PathVariable Long id) {
         clientRepository.deleteById(id);
+        clientRelationsService.deleteRelationship(id);
         return ResponseEntity.ok().build();
     }
 
 
     //Method for link counting
-    public long countLinks (Client client){
-        //Defining variables
-        long countingNumOfLinks = 0;      //
-        long userId = client.getLink();  //id of client from the link (link frm client we create)
-
-        //Counting through while cycle=> if next link found, we count +1 and take this link as new user id
-
-        while (userId != 0L){
-            countingNumOfLinks +=1;
-            long foundLink = clientRepository.findLinkByClientId(userId);  //found link => id of other client
-            userId = foundLink;                                 //new user id = link that is id of other client
-            System.out.println("Counting links: " + countingNumOfLinks);
-            System.out.println("Found next link: " + userId);
-        }
-
-        System.out.println("Link calculation stopped");
-        return countingNumOfLinks;
-    }
-
-    public void linkCheckAndSetUp (Client client) {
-
-        if (client.getLink() == null) {
-            client.setLink(0L);
-            client.setLinkCount(0L);  //if link was set incorrectly => total link count = 0
-        } else {
-            //Reference to other client entered by user
-            long referenceToOtherClient = client.getLink();
-
-            //1. If client with id defined as reference exists or link is 0 => counting number of links and set to client
-            if (clientRepository.findClientById(referenceToOtherClient) != null) {
-
-                //Calculating number of links with function and set this number to client
-                long numberOfLinks = countLinks(client);
-                client.setLinkCount(numberOfLinks);
-
-                //2. If client with id defined as reference NOT exists => we set link as 0 and accordingly link count as 0
-            } else {
-                client.setLink(0L);
-                client.setLinkCount(0L);  //if link was set incorrectly => total link count = 0
-            }
-        }
-
-    }
+//    public long countLinks (Client client){
+//        //Defining variables
+//        long countingNumOfLinks = 0;      //
+//        long userId = client.getLink();  //id of client from the link (link frm client we create)
+//
+//        //Counting through while cycle=> if next link found, we count +1 and take this link as new user id
+//
+//        while (userId != 0L){
+//            countingNumOfLinks +=1;
+//            long foundLink = clientRepository.findLinkByClientId(userId);  //found link => id of other client
+//            userId = foundLink;                                 //new user id = link that is id of other client
+//            System.out.println("Counting links: " + countingNumOfLinks);
+//            System.out.println("Found next link: " + userId);
+//        }
+//
+//        System.out.println("Link calculation stopped");
+//        return countingNumOfLinks;
+//    }
+//
+//    public void linkCheckAndSetUp (Client client) {
+//
+//        if (client.getLink() == null) {
+//            client.setLink(0L);
+//            client.setLinkCount(0L);  //if link was set incorrectly => total link count = 0
+//        } else {
+//            //Reference to other client entered by user
+//            long referenceToOtherClient = client.getLink();
+//
+//            //1. If client with id defined as reference exists or link is 0 => counting number of links and set to client
+//            if (clientRepository.findClientById(referenceToOtherClient) != null) {
+//
+//                //Calculating number of links with function and set this number to client
+//                long numberOfLinks = countLinks(client);
+//                client.setLinkCount(numberOfLinks);
+//
+//                //2. If client with id defined as reference NOT exists => we set link as 0 and accordingly link count as 0
+//            } else {
+//                client.setLink(0L);
+//                client.setLinkCount(0L);  //if link was set incorrectly => total link count = 0
+//            }
+//        }
+//
+//    }
 
         public void parentIdCheck (Client client){
 
