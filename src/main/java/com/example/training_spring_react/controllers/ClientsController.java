@@ -102,31 +102,31 @@ public class ClientsController {
 
 
     //Finding a CEO by child count, path '/clients/CEO'
-    @GetMapping("/CEO")
-    public List<Client> getCEO() {
-
-        //1. FINDING ALL CLIENTS, PUTTING THEM INTO THE LIST
-        List<Client> allClientList = clientRepository.findAllClients();
-
-        //2. CALCULATING CHILDS FOR EACH CLIENT FROM THE LIST
-        for(int i = 0; i< allClientList.size(); i++){
-
-            //2.1. currentClient => client found in DB by id
-            Client currentClient = clientRepository.findById(allClientList.get(i).getId()).orElseThrow(RuntimeException::new);
-
-            //2.2. Calculating childs for currentClient and setting this number as childCount value
-            long childNum = clientRelationsService.findChildrenList(currentClient.getId());
-            currentClient.setChildCount(childNum);
-
-            //2.3. Saving updated client
-            clientRepository.save(currentClient);
-        }
-
-        //3. WHEN CHILDS FOR ALL CLIENTS CALCULATED => WE SHOULD FIND CEO
-        ArrayList<Client> foundCEO = clientRepository.findCEO();
-
-        return foundCEO;
-    }
+//    @GetMapping("/CEO")
+//    public List<Client> getCEO() {
+//
+//        //1. FINDING ALL CLIENTS, PUTTING THEM INTO THE LIST
+//        List<Client> allClientList = clientRepository.findAllClients();
+//
+//        //2. CALCULATING CHILDS FOR EACH CLIENT FROM THE LIST
+//        for(int i = 0; i< allClientList.size(); i++){
+//
+//            //2.1. currentClient => client found in DB by id
+//            Client currentClient = clientRepository.findById(allClientList.get(i).getId()).orElseThrow(RuntimeException::new);
+//
+//            //2.2. Calculating childs for currentClient and setting this number as childCount value
+//            long childNum = clientRelationsService.findChildrenList(currentClient.getId());
+//            currentClient.setChildCount(childNum);
+//
+//            //2.3. Saving updated client
+//            clientRepository.save(currentClient);
+//        }
+//
+//        //3. WHEN CHILDS FOR ALL CLIENTS CALCULATED => WE SHOULD FIND CEO
+//        ArrayList<Client> foundCEO = clientRepository.findCEO();
+//
+//        return foundCEO;
+//    }
 
 
     //Linked client list, path '/clients/linked'
@@ -259,6 +259,7 @@ public class ClientsController {
                                                        if not exists - put 0 value as parent id */
         parentIdCheck(client);
         currentClient.setParentID(client.getParentID());
+        clientRelationsService.updateRelationship(currentClient.getId(), currentClient.getParentID());
 
         //COUNTING CHILDS
 //        long numOfChilds = clientRelationsService.findChildrenList(currentClient.getId());

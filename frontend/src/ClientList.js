@@ -66,7 +66,7 @@ class ClientList extends Component {
                 {/*<td>{client.link}</td>*/}
                 {/*<td>{client.linkCount}</td>*/}
                 {/*<td>{client.managerID}</td>*/}
-                <td>{client.parentID}</td>
+                {/*<td>{client.parentID}</td>*/}
                 {/*<td>{client.childCount}</td>*/}
 
                 <td>
@@ -106,7 +106,7 @@ class ClientList extends Component {
                             {/*<th width="8%">Link</th>*/}
                             {/*<th width="8%">Link count</th>*/}
                             {/*<th width="8%">Manager ID</th>*/}
-                            <th width="8%">Parent ID</th>
+                            {/*<th width="8%">Parent ID</th>*/}
                             {/*<th width="8%">Child count</th>*/}
                             <th width="45%">Actions</th>
                         </tr>
