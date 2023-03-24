@@ -13,13 +13,13 @@ class ClientEdit extends Component {
         dob: '',
         link: '',                    //Added for new task => reference to other user
         managerID: '',
-        parent_id: ''
+        parent_id: '',
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            item: this.emptyItem          //initial state = object with NO name, email created above
+            item: this.emptyItem,          //initial state = object with NO name, email created above
         };
         this.handleChange = this.handleChange.bind(this); //now 'this' points out to object inside function (e.g., this.name)
         this.handleSubmit = this.handleSubmit.bind(this); //now 'this' points out to object inside function (e.g., this.name)
@@ -50,6 +50,7 @@ class ClientEdit extends Component {
         let item = {...this.state.item};     //item state = current state
         item[name] = value;                  //changing existing name to value???
         this.setState({item});          //setting new state for item
+        this.setState({error});
     }
 
     /*
@@ -69,16 +70,22 @@ class ClientEdit extends Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(item),
-        });
-        //IF - ELSE  (for response from back-end)
-        if(!response.ok){
-            this.props.history.push('/clients');
-            console.log("Something went wrong, status code: " + response.status);
-        }else{
-            this.props.history.push('/clients');
-            console.log("Successful operation, status code: " + response.status);
-        }
-       // this.props.history.push('/clients'); //push => method adds one or more elements to the end of an array and returns the new length of the array
+        }).then((response) => response.json())
+            .then((data) => {
+                console.log("Result:", data);
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+            });
+       //  //IF - ELSE  (for response from back-end)
+       //  if(!response.ok){
+       //      // this.props.history.push('/clients' + (item.id ? '/' + item.id : '');
+       //      console.log("Something went wrong, status code: " + response.status + "Issue: " + JSON.stringify(response.headers));
+       //  }else{
+       //      this.props.history.push('/clients');
+       //      console.log("Successful operation, status code: " + response.status);
+       //  }
+       // // this.props.history.push('/clients'); //push => method adds one or more elements to the end of an array and returns the new length of the array
     }
 
     render() {
@@ -90,6 +97,7 @@ class ClientEdit extends Component {
             <Container>
                 {title}
                 <Form onSubmit={this.handleSubmit}>
+                    <Label for="errorText" value={item.errorText}></Label>
 
                     <FormGroup>
                         <Label for="name">Name</Label>
